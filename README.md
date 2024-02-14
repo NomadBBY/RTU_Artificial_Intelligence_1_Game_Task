@@ -1,7 +1,3 @@
-Sure, here's a README for your code:
-
----
-
 # Checkers Game using Pygame
 
 This is a simple implementation of the game of Checkers using the Pygame library in Python. Checkers is a classic board game played between two players, where each player aims to capture or block the opponent's pieces while avoiding their own pieces being captured.
