@@ -37,7 +37,3 @@ This is a Python implementation of the classic board game Fox and Hounds using t
 ## Contributing
 
 Created by Artis Čevers
-
-## License
-
-Enjoy the game!
