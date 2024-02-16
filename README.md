@@ -2,6 +2,8 @@
 
 This is a Python implementation of the classic board game Fox and Hounds using the Pygame library.
 
+image.png
+
 ## How to Play
 
 1. **Setup**: The game is played on an 8x8 grid. The Fox player starts at the bottom center square, while the Hound players start at the top row, spaced out across the row.
