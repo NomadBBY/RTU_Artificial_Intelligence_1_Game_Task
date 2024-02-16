@@ -1,39 +1,43 @@
-# Checkers Game using Pygame
+# Fox and Hounds Game
 
-This is a simple implementation of the game of Checkers using the Pygame library in Python. Checkers is a classic board game played between two players, where each player aims to capture or block the opponent's pieces while avoiding their own pieces being captured.
+This is a Python implementation of the classic board game Fox and Hounds using the Pygame library.
 
-## Requirements
-- Python 3.x
-- Pygame
+## How to Play
 
-## Installation
-You can install Pygame using pip:
-```bash
-pip install pygame
-```
+1. **Setup**: The game is played on an 8x8 grid. The Fox player starts at the bottom center square, while the Hound players start at the top row, spaced out across the row.
+   
+2. **Objective**: The Fox player's goal is to reach the top row. The Hound players' goal is to trap the Fox so that it cannot move.
+   
+3. **Movement**: Players take turns moving their pieces diagonally to adjacent squares. The Fox player can move in any direction, while the Hound players can only move forward diagonally.
 
-## How to Run
-To run the Checkers game, simply execute the Python script `checkers.py` using Python 3.x.
+4. **Winning**: The Fox player wins if it reaches the top row. The Hound players win if they trap the Fox so that it cannot move.
 
-![Alt text](image.png)
+## Installation and Running the Game
 
-```bash
-python checkers.py
-```
+1. **Clone the Repository**: Clone this repository to your local machine using:
 
-## Gameplay
-- The game initializes with a standard checkers board.
-- Red pieces start at the bottom, and white pieces start at the top.
-- Players take turns moving their pieces diagonally forward.
-- If a piece reaches the opponent's back row, it becomes a king and can move diagonally backward as well.
-- Capturing is done by jumping over an opponent's piece diagonally.
-- The game ends when one player captures all of the opponent's pieces or blocks them from making any legal moves.
+    ```
+    git clone https://github.com/yourusername/fox-and-hounds.git
+    ```
 
-## Code Structure
-- `checkers.py` contains the main game loop and initializes the Pygame window.
-- `constants.py` defines constants such as colors and board dimensions.
-- `board_setup.py` contains the logic for drawing the game board and calculating scores.
-- `gameboard.py` contains the class representing the game board and its state.
+2. **Install Dependencies**: Ensure you have Python and Pygame installed on your system.
 
-## Credits
-This code is created by Artis Čevers.
+3. **Run the Game**: Navigate to the project directory and run the following command:
+
+    ```
+    python fox_and_hounds.py
+    ```
+
+## Files Included
+
+- `fox_and_hounds.py`: Contains the main game logic and implementation.
+- `hound_image.png`: Image file representing the Hound player's piece.
+- `fox_image.png`: Image file representing the Fox player's piece.
+
+## Contributing
+
+Created by Artis Čevers
+
+## License
+
+Enjoy the game!
