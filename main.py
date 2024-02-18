@@ -1,118 +1,38 @@
-"""
-Fox and Hounds Game
-
-This program implements the classic board game Fox and Hounds using the Pygame library.
-
-"""
-
 import pygame
 from pygame.locals import *
+from board_setup import *
+from constants import *
+from game_logic import *
+from choose_player import * 
 
-class Colours:
-    """
-    Defines color constants used in the game.
-    """
-    BLACK = (0, 0, 0)
-    WHITE = (255, 255, 255)
-    RED = (255, 0, 0)
-    GREY = (128, 128, 128)
-    BLUE = (0, 0, 255)
-    ORANGE = (255, 117, 24)
+def main():
+    # Initialize pygame
+    pygame.init()
 
-class Constants:
-    """
-    Defines various constants used in the game.
-    """
-    SQUARE_SIZE = 100
-    SCREEN_SIZE = (800, 800)
+    # Set up the welcome screen
+    welcome_screen = pygame.display.set_mode(WELCOME_SCREEN)
 
-class BoardSetup:
-    """
-    Class responsible for setting up and drawing the game board.
-    """
-    def __init__(self, game_screen) -> None:
-        self.game_screen = game_screen
-        self.hound_image = pygame.transform.scale(pygame.image.load('hound_image.png'), (Constants.SQUARE_SIZE, Constants.SQUARE_SIZE))
-        self.fox_image = pygame.transform.scale(pygame.image.load('fox_image.png'), (Constants.SQUARE_SIZE, Constants.SQUARE_SIZE))
+    # Ask the user to choose a player and get the chosen player
+    player = choose_player(welcome_screen)
 
-    def draw_squares(self):
-        """
-        Draws the game board grid.
-        """
-        self.game_screen.fill(Colours.ORANGE)
-        for row in range(8):
-            for col in range(row % 2, 8, 2):
-                x = col * Constants.SQUARE_SIZE
-                y = row * Constants.SQUARE_SIZE
-                square_rect = pygame.Rect(x, y, Constants.SQUARE_SIZE, Constants.SQUARE_SIZE)
-                pygame.draw.rect(self.game_screen, Colours.BLACK, square_rect)
+    # Set up the game screen
+    game_screen = pygame.display.set_mode(SCREEN_SIZE)
 
-    @staticmethod
-    def get_row_from_mouse(position):
-        """
-        Gets the row and column index from mouse position.
-        """
-        x_cord, y_cord = position
-        row_index = x_cord // Constants.SQUARE_SIZE
-        col_index = y_cord // Constants.SQUARE_SIZE
-        return row_index, col_index
+    # Initialize the positions of hounds and fox
+    hounds = [(0, 1), (0, 3), (0, 5), (0, 7)]
+    fox = (7, 4)
 
-    def draw_piece(self, window, x_pos, y_pos, image):
-        """
-        Draws a game piece on the board.
-        """
-        radius = Constants.SQUARE_SIZE // 3
-        image_center_x = x_pos + image.get_width() // 2
-        image_center_y = y_pos + image.get_height() // 2
-        circle_center = (image_center_x, image_center_y - 2.5)
-        pygame.draw.circle(window, Colours.BLACK, circle_center, radius + 2)
-        image_top_left = (image_center_x - image.get_width() // 2, image_center_y - image.get_height() // 2)
-        window.blit(image, image_top_left)
+    # Set the current player to the chosen player
+    current_player = player
 
-    def draw_pieces(self, hound_positions, fox_position):
-        """
-        Draws all game pieces on the board.
-        """
-        for position in hound_positions:
-            x, y = position[1] * Constants.SQUARE_SIZE, position[0] * Constants.SQUARE_SIZE
-            self.draw_piece(self.game_screen, x, y, self.hound_image)
-        x, y = fox_position[1] * Constants.SQUARE_SIZE, fox_position[0] * Constants.SQUARE_SIZE
-        self.draw_piece(self.game_screen, x, y, self.fox_image)
+    # Print the current player for debugging
+    print(current_player)
 
-class FoxAndHounds:
-    """
-    Class representing the Fox and Hounds game.
-    """
-    def __init__(self, game_screen):
-        self.game_screen = game_screen
-        self.board = BoardSetup(game_screen)
-        self.hounds = [(0, 1), (0, 3), (0, 5), (0, 7)]
-        self.fox = (7, 4)
-        self.current_player = 'Fox'
+    # Start the game loop
+    initialize_game(game_screen, player, hounds, fox, current_player)
 
-    def play(self):
-        """
-        Main game loop for Fox and Hounds.
-        """
-        print("Welcome to Fox and Hounds!")
-        while True:
-            for event in pygame.event.get():
-                if event.type == QUIT:
-                    pygame.quit()
-                    return
-            self.board.draw_squares()
-            self.board.draw_pieces(self.hounds, self.fox)
-            pygame.display.flip()
+    # Quit pygame when the game loop ends
+    pygame.quit()
 
-# Initialize pygame
-pygame.init()
-game_screen = pygame.display.set_mode(Constants.SCREEN_SIZE)
-
-# Create a Fox and Hounds game instance
-game = FoxAndHounds(game_screen)
-
-# Main loop
-game.play()
-
-# Quit pygame
-pygame.quit()
+if __name__ == "__main__":
+    main()
