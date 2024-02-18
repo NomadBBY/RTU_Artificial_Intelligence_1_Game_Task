@@ -1,8 +1,8 @@
 # Fox and Hounds Game
 
 This is a Python implementation of the classic board game Fox and Hounds using the Pygame library.
-
-![Ekrānuzņēmums 2024-02-16 101711](https://github.com/NomadBBY/RTU_Artificial_Intelligence_1_Game_Task/assets/89861525/80ea7e4e-883f-4342-ae55-eff9a2d4037a)
+![image](https://github.com/NomadBBY/RTU_Artificial_Intelligence_1_Game_Task/assets/89861525/88d29eae-9032-42c1-a4c6-79d893452dec)
+![image](https://github.com/NomadBBY/RTU_Artificial_Intelligence_1_Game_Task/assets/89861525/c5431086-318d-4086-a882-880b162fb624)
 
 ## How to Play
 
