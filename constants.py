@@ -9,7 +9,8 @@ WHITE = (255, 255, 255)
 """
 Defines various constants used in the game.
 """
-SQUARE_SIZE = 100
-SCREEN_SIZE = (800, 800)
+SQUARE_SIZE = 50
+SCREEN_SIZE = (400, 400)
 WELCOME_SCREEN = (600, 350)
 FONT_SIZE = 50
+BOARD_SIZE = 8

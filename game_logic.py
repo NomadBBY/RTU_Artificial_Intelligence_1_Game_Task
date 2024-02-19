@@ -18,3 +18,4 @@ def initialize_game(game_screen, player, hounds, fox, current_player):
         draw_squares(game_screen)  # Draw the game board grid
         draw_pieces(game_screen, hounds, fox)  # Draw all game pieces on the board
         pygame.display.flip()  # Update the display to show the changes
+
