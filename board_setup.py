@@ -1,6 +1,6 @@
 import pygame
 from pygame.locals import *
-from constants import SQUARE_SIZE, BLACK, ORANGE, GREY
+from CONSTANTS import SQUARE_SIZE, BLACK, ORANGE, GREY
 
 def draw_squares(game_screen):
     """

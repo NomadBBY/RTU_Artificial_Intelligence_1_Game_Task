@@ -2,7 +2,7 @@
 import pygame
 from pygame.locals import *
 from board_setup import *
-from constants import *
+from CONSTANTS import *
 from game_logic import ask_for_fox_coordinates
 from choose_player import *
 
@@ -12,7 +12,7 @@ class GameClass:
         self.game_screen = None
         self.fox = (7, 4)
 
-    def initialize_game(self):
+    def initialize_game(self, player, current_player):
         """
         Initializes and starts the game loop.
         """

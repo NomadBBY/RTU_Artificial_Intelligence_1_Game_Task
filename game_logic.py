@@ -1,5 +1,26 @@
 import pygame
-from constants import BOARD_SIZE, SQUARE_SIZE
+from CONSTANTS import BOARD_SIZE, SQUARE_SIZE
+
+def get_cords_from_mouse():
+    pass
+
+# Definē funkciju, lai iegūtu kvadrāta rindu un kolonnu, pamatojoties uz spēlētāja peles pozīciju
+def get_row_col_from_mouse(pos):
+    pass
+    # # Peles pozīcijas x un y koordinātas
+    # x, y = pos
+    # row_index = y // SQUARE
+    # col_index = x // SQUARE
+    # return row_index, col_index
+
+def draw_valid_moves(self, moves):
+    pass
+#         # Parāda ceļu ko spelētājs var izvēlēties
+#         for move in moves:
+#             row, col = move
+#             # Aprēķina apļa centra koordinātas, pamatojoties uz rindu un kolonnu
+#             # no derīgā gājiena un katra laukuma lielums uz galda
+#             pygame.draw.circle(self.game_window, BLUE, (col * SQUARE + SQUARE // 2, row * SQUARE + SQUARE // 2), 15)
 
 def ask_for_fox_coordinates(fox):
     print("Click on the new position for the fox:")

@@ -1,6 +1,6 @@
 import pygame
 from pygame.locals import *
-from constants import WHITE, BLACK, ORANGE
+from CONSTANTS import WHITE, BLACK, ORANGE
 
 def choose_player(game_screen):
     """
