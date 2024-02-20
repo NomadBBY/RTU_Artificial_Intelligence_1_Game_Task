@@ -1,21 +1,18 @@
 import pygame
-from pygame.locals import *
-from board_setup import draw_squares, draw_pieces
+from constants import BOARD_SIZE, SQUARE_SIZE
 
-def initialize_game(game_screen, player, hounds, fox, current_player):
-    """
-    Initializes and starts the game loop.
-    """
-    pygame.init()  # Initialize Pygame here
-    print("Welcome to Fox and Hounds!")
-    while True:  # Main game loop
-        for event in pygame.event.get():  # Check for events
-            if event.type == QUIT:  # If the user quits the game
-                pygame.quit()  # Quit Pygame
-                return  # Exit the function and stop the game loop
+def ask_for_fox_coordinates(fox):
+    print("Click on the new position for the fox:")
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = event.pos
+                x //= SQUARE_SIZE  # Assuming SQUARE_SIZE is the size of each square on the board
+                y //= SQUARE_SIZE  # Assuming SQUARE_SIZE is the size of each square on the board
+                if (0 <= x < BOARD_SIZE) and (0 <= y < BOARD_SIZE) and (abs(x - fox[0]) == abs(y - fox[1])):
+                    return (x, y)  # Return valid coordinates
+                else:
+                    print("Invalid position. Please click on a diagonal square relative to the current fox position.")
 
-        # Draw the game board and pieces
-        draw_squares(game_screen)  # Draw the game board grid
-        draw_pieces(game_screen, hounds, fox)  # Draw all game pieces on the board
-        pygame.display.flip()  # Update the display to show the changes
-
+def ask_for_hound_cordinates():
+    pass

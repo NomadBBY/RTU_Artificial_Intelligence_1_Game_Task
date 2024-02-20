@@ -1,0 +1,5 @@
+Info no lekcijas
+
+1. Veidot spēles koku un aprakstīto to kā datu struktūru
+2. Izstradāt spēles grafisko saskarni
+3. 
