@@ -135,6 +135,13 @@ class Game:
                 else:
                     print("Invalid choice. Please try again.")
                     continue  # Restart the loop if the choice is invalid
+        
+        if self.score[self.player.human] > self.score[self.player.computer]:
+            print("Human wins with a score of:", self.score[self.player.human], "Goodbye!")
+        elif self.score[self.player.human] < self.score[self.player.computer]:
+            print("Computer wins with a score of:", self.score[self.player.computer], "Goodbye!")
+        else:
+            print("It's a tie!", "Goodbye!")
 
         
 # Main part of the code
