@@ -46,5 +46,7 @@ import time
 if __name__ == "__main__":
     new_game = Game()  # Creating an instance of the Game class
     new_game.start_game()  # Starting the game
+```
 
-Created by Artis Čevers
+## Contributions
+Artis Čevers
