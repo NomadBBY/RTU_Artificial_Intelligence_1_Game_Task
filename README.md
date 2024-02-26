@@ -2,6 +2,9 @@
 
 This is a simple text-based game where the player chooses a number and then multiplies it by either 2 or 3. The game continues until a player reaches a total score of 1000 or more. Players take turns multiplying the number and adding it to their score. The player with the highest score at the end wins.
 
+![image](https://github.com/NomadBBY/RTU_Artificial_Intelligence_1_Game_Task/assets/89861525/3252b70b-fa1e-4a93-9210-e4a1f63a4c03)
+![image](https://github.com/NomadBBY/RTU_Artificial_Intelligence_1_Game_Task/assets/89861525/8f832597-6342-447b-93fa-0fb84dac3e2c)
+
 ## How to Play
 
 1. Run the script `main.py` from new_game folder.
