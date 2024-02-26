@@ -131,6 +131,8 @@ class GameWindow:
 
     def game_screen(self):
 
+        text_font = pygame.font.Font(None, 36) #Font for the under text
+
         # Define button parameters
         button_width = 75
         button_height = 35
@@ -139,6 +141,23 @@ class GameWindow:
 
         # Clear the screen
         self.window.fill((BACKGROUND_COLOR))
+
+         # Manual input for text positions
+        text1_x = 50
+        text1_y = 100
+        
+        text2_x = 350
+        text2_y = 100
+
+        # Render text "Izvēleties kurš sāk"
+        text1 = text_font.render("Izvēleties kurš sāk", True, (0, 0, 0))
+        text1_rect = text1.get_rect(topleft=(text1_x, text1_y))
+        self.window.blit(text1, text1_rect)
+
+        # Render text "Izvēleties kurš sāk"
+        text2 = text_font.render("Izvēleties kurš sāk", True, (0, 0, 0))
+        text2_rect = text2.get_rect(topleft=(text2_x, text2_y))
+        self.window.blit(text2, text2_rect)
 
         # Define custom x and y positions for the buttons
         button1_x = 75
