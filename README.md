@@ -4,6 +4,7 @@ This is a simple text-based game where the player chooses a number and then mult
 
 ![image](https://github.com/NomadBBY/RTU_Artificial_Intelligence_1_Game_Task/assets/89861525/3252b70b-fa1e-4a93-9210-e4a1f63a4c03)
 ![image](https://github.com/NomadBBY/RTU_Artificial_Intelligence_1_Game_Task/assets/89861525/8f832597-6342-447b-93fa-0fb84dac3e2c)
+![image](https://github.com/NomadBBY/RTU_Artificial_Intelligence_1_Game_Task/assets/89861525/562538ad-82e5-4019-9bc1-061ca4270f33)
 
 ## How to Play
 
