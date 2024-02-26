@@ -264,6 +264,9 @@ class GameWindow:
 
         pygame.quit()
 
+    def winner_screen(self):
+        pass
+
 
 # Exmmple usage:
 if __name__ == "__main__":
