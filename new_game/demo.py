@@ -131,46 +131,46 @@ class GameWindow:
 
     def game_screen(self):
 
-        text_font = pygame.font.Font(None, 36) #Font for the under text
+        text_font = pygame.font.Font(None, 45)  # Font for the text
+        number_font = pygame.font.Font(None, 30)  # Font for the number
 
         # Define button parameters
-        button_width = 75
+        button_width = 60
         button_height = 35
         button_color = BUTTON_COLOR
         button_font = pygame.font.Font(None, 24)
 
         # Clear the screen
-        self.window.fill((BACKGROUND_COLOR))
+        self.window.fill(BACKGROUND_COLOR)
 
-         # Manual input for text positions
-        text1_x = 50
+        # Manual input for text positions
+        text1_x = 100
         text1_y = 100
-        
-        text2_x = 350
+
+        text2_x = 400
         text2_y = 100
 
-        # Render text "Izvēleties kurš sāk"
-        text1 = text_font.render("Izvēleties kurš sāk", True, (0, 0, 0))
+        # Render text "Spēlētājs"
+        text1 = text_font.render("Spēlētājs", True, (0, 0, 0))
         text1_rect = text1.get_rect(topleft=(text1_x, text1_y))
         self.window.blit(text1, text1_rect)
 
-        # Render text "Izvēleties kurš sāk"
-        text2 = text_font.render("Izvēleties kurš sāk", True, (0, 0, 0))
+        # Render text "Dators"
+        text2 = text_font.render("Dators", True, (0, 0, 0))
         text2_rect = text2.get_rect(topleft=(text2_x, text2_y))
         self.window.blit(text2, text2_rect)
 
-        # Define custom x and y positions for the buttons
-        button1_x = 75
+        button1_x = 80
         button1_y = 150
 
-        button2_x = 175
+        button2_x = 180
         button2_y = 150
 
-        button3_x = 350
+        button3_x = 360
         button3_y = 150
 
-        button4_x = 450
-        button4_y = 150     
+        button4_x = 460
+        button4_y = 150
 
         # Render buttons
         button_rects = []  # List to store button rects for collision detection
@@ -203,6 +203,22 @@ class GameWindow:
         self.window.blit(button_text, button_text_rect)
         button_rects.append(button_rect)
 
+        # Render the window under buttons with number 1
+        window1_rect = pygame.Rect(80, 200, 165, 50)
+        pygame.draw.rect(self.window, (200, 200, 200), window1_rect)
+        number1 = 1  # Initial number for window 1
+        number1_text = number_font.render(str(number1), True, (0, 0, 0))
+        number1_text_rect = number1_text.get_rect(center=window1_rect.center)
+        self.window.blit(number1_text, number1_text_rect)
+
+        # Render the window under buttons with number 1
+        window2_rect = pygame.Rect(360, 200, 165, 50)
+        pygame.draw.rect(self.window, (200, 200, 200), window2_rect)
+        number2 = 1  # Initial number for window 2
+        number2_text = number_font.render(str(number2), True, (0, 0, 0))
+        number2_text_rect = number2_text.get_rect(center=window2_rect.center)
+        self.window.blit(number2_text, number2_text_rect)
+
         pygame.display.update()
 
         # Main loop to handle events
@@ -217,19 +233,37 @@ class GameWindow:
                         for i, rect in enumerate(button_rects):
                             if rect.collidepoint(event.pos):
                                 if i == 0:
-                                    print(f"Button {i+1} clicked!")
-                                    # Handle button 1 click action here
+                                    print(f"Button {i + 1} clicked!")
+                                    number1 *= 2  # Double the number for window 1
                                 elif i == 1:
-                                    print(f"Button {i+1} clicked!")
-                                    # Handle button 2 click action here
+                                    print(f"Button {i + 1} clicked!")
+                                    number1 *= 3  # Triple the number for window 1
                                 elif i == 2:
-                                    print(f"Button {i+1} clicked!")
-                                    # Handle button 3 click action here
+                                    print(f"Button {i + 1} clicked!")
+                                    number2 *= 2  # Double the number for window 2
                                 elif i == 3:
-                                    print(f"Button {i+1} clicked!")
-                                    # Handle button 4 click action here
+                                    print(f"Button {i + 1} clicked!")
+                                    number2 *= 3  # Triple the number for window 2
+
+                                # Update the numbers displayed in the windows
+                                number1_text = number_font.render(str(number1), True, (0, 0, 0))
+                                number2_text = number_font.render(str(number2), True, (0, 0, 0))
+
+                                self.window.fill((200, 200, 200), rect=window1_rect)  # Clear previous number for window 1
+                                self.window.blit(number1_text, number1_text_rect)
+
+                                self.window.fill((200, 200, 200), rect=window2_rect)  # Clear previous number for window 2
+                                self.window.blit(number2_text, number2_text_rect)
+                                
+                                pygame.display.update()
+                                # Check if either number is >= 1000
+                                if number1 >= 1000 or number2 >= 1000:
+                                    print("Goodbye")
+                                    running = False
+                                    break  # Exit the loop
 
         pygame.quit()
+
 
 # Exmmple usage:
 if __name__ == "__main__":
