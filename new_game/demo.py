@@ -129,18 +129,103 @@ class GameWindow:
 
         pygame.quit()
 
-# Example usage:
+    def game_screen(self):
+
+        # Define button parameters
+        button_width = 75
+        button_height = 35
+        button_color = BUTTON_COLOR
+        button_font = pygame.font.Font(None, 24)
+
+        # Clear the screen
+        self.window.fill((BACKGROUND_COLOR))
+
+        # Define custom x and y positions for the buttons
+        button1_x = 75
+        button1_y = 150
+
+        button2_x = 175
+        button2_y = 150
+
+        button3_x = 350
+        button3_y = 150
+
+        button4_x = 450
+        button4_y = 150     
+
+        # Render buttons
+        button_rects = []  # List to store button rects for collision detection
+
+        button_rect = pygame.Rect(button1_x, button1_y, button_width, button_height)
+        pygame.draw.rect(self.window, button_color, button_rect)
+        button_text = button_font.render("x2", True, (0, 0, 0))
+        button_text_rect = button_text.get_rect(center=button_rect.center)
+        self.window.blit(button_text, button_text_rect)
+        button_rects.append(button_rect)
+
+        button_rect = pygame.Rect(button2_x, button2_y, button_width, button_height)
+        pygame.draw.rect(self.window, button_color, button_rect)
+        button_text = button_font.render("x3", True, (0, 0, 0))
+        button_text_rect = button_text.get_rect(center=button_rect.center)
+        self.window.blit(button_text, button_text_rect)
+        button_rects.append(button_rect)
+
+        button_rect = pygame.Rect(button3_x, button3_y, button_width, button_height)
+        pygame.draw.rect(self.window, button_color, button_rect)
+        button_text = button_font.render("x2", True, (0, 0, 0))
+        button_text_rect = button_text.get_rect(center=button_rect.center)
+        self.window.blit(button_text, button_text_rect)
+        button_rects.append(button_rect)
+
+        button_rect = pygame.Rect(button4_x, button4_y, button_width, button_height)
+        pygame.draw.rect(self.window, button_color, button_rect)
+        button_text = button_font.render("x3", True, (0, 0, 0))
+        button_text_rect = button_text.get_rect(center=button_rect.center)
+        self.window.blit(button_text, button_text_rect)
+        button_rects.append(button_rect)
+
+        pygame.display.update()
+
+        # Main loop to handle events
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        # Check if any button is clicked
+                        for i, rect in enumerate(button_rects):
+                            if rect.collidepoint(event.pos):
+                                if i == 0:
+                                    print(f"Button {i+1} clicked!")
+                                    # Handle button 1 click action here
+                                elif i == 1:
+                                    print(f"Button {i+1} clicked!")
+                                    # Handle button 2 click action here
+                                elif i == 2:
+                                    print(f"Button {i+1} clicked!")
+                                    # Handle button 3 click action here
+                                elif i == 3:
+                                    print(f"Button {i+1} clicked!")
+                                    # Handle button 4 click action here
+
+        pygame.quit()
+
+# Exmmple usage:
 if __name__ == "__main__":
     game = GameWindow()
 
-    result = game.welcome_screen()
+    # result = game.welcome_screen()
     
     
-    if result == "human":
-        print("I am a human")
-    else:
-        print("I am a computer")
+    # if result == "human":
+    #     print("I am a human")
+    # else:
+    #     print("I am a computer")
 
-    # Call choice_screen method to display the choice screen
-    result = game.choice_screen()
-    print("You chose: ", result)
+    # # Call choice_screen method to display the choice screen
+    # result = game.choice_screen()
+    # print("You chose: ", result)
+
+    game.game_screen()
