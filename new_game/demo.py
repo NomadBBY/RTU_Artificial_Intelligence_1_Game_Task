@@ -10,7 +10,17 @@ class GameWindow:
         self.width = width
         self.height = height
         self.window = pygame.display.set_mode((self.width, self.height))
+        self.running = True
         pygame.display.set_caption('Multiplication game')
+
+    def reset_game(self):
+        self.welcome_screen()
+        result = self.choice_screen()
+        print("You chose:", result)
+        self.game_screen()
+        # Reset the running variable
+        self.running = True
+
 
     def welcome_screen(self):
 
@@ -227,6 +237,7 @@ class GameWindow:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
+                    break  # Exit the loop if running is set to False
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         # Check if any button is clicked
@@ -254,34 +265,130 @@ class GameWindow:
 
                                 self.window.fill((200, 200, 200), rect=window2_rect)  # Clear previous number for window 2
                                 self.window.blit(number2_text, number2_text_rect)
-                                
-                                pygame.display.update()
-                                # Check if either number is >= 1000
-                                if number1 >= 1000 or number2 >= 1000:
-                                    print("Goodbye")
-                                    running = False
-                                    break  # Exit the loop
 
-        pygame.quit()
+                               pygame.display.update()
+                        # Check if either number is >= 1000
+                        if number1 >= 1000 or number2 >= 1000:
+                            print("Goodbye")
+                            # Reset the game
+                            running = False
+                            break  # Exit the loop
+    if not running:  # Check if running is set to False
+        # Reset the game
+        self.reset_game()
+                                                
+                                                
+                                                
+    def winner_screen(self, human_score, pc_score):
+        """
+        Display a winner screen with human and PC scores and a continue button.
 
-    def winner_screen(self):
-        pass
+        Args:
+            human_score (int): The score of the human player.
+            pc_score (int): The score of the PC player.
+        """
+        pygame.init()
+        # Define the text
+        text = "Spēlētājs uzvarēja"
+
+        # Define headline position
+        text_x = 300
+        text_y = 85
+
+        # Define text positions
+        text1_x = 150
+        text1_y = 160
+
+        text2_x = 450
+        text2_y = 160
+
+        # Define window positions
+        window1_x = 100
+        window1_y = 200
+
+        window2_x = 420
+        window2_y = 200
+
+        # Define button position and size
+        button_x = 200
+        button_y = 280
+        button_width = 200
+        button_height = 50
+
+        self.window.fill(BACKGROUND_COLOR)
+        headline_text = pygame.font.Font(None, 45)
+        text_surface = headline_text.render(text, True, (0, 0, 0))
+
+        text_font = pygame.font.Font(None, 35)
+        # Set the text position
+        text_rect = text_surface.get_rect(center=(text_x, text_y))
+        self.window.blit(text_surface, text_rect)
+
+        # Render "Human Result" text
+        text_surface = text_font.render("Human Result", True, (0, 0, 0))
+        text_rect = text_surface.get_rect(center=(text1_x, text1_y))
+        self.window.blit(text_surface, text_rect)
+
+        # Render "PC Result" text
+        text_surface = text_font.render("PC Result", True, (0, 0, 0))
+        text_rect = text_surface.get_rect(center=(text2_x, text2_y))
+        self.window.blit(text_surface, text_rect)
+
+        # Render windows with scores
+        number_font = pygame.font.Font(None, 24)
+
+        # Render window 1 with human score
+        window1_rect = pygame.Rect(window1_x, window1_y, 90, 35)
+        pygame.draw.rect(self.window, (255, 255, 255), window1_rect)  # Draw white rectangle as background
+        human_score_surface = number_font.render(str(human_score), True, (0, 0, 0))
+        number_rect = human_score_surface.get_rect(center=window1_rect.center)
+        self.window.blit(human_score_surface, number_rect.topleft)
+
+        # Render window 2 with PC score
+        window2_rect = pygame.Rect(window2_x, window2_y, 90, 35)
+        pygame.draw.rect(self.window, (255, 255, 255), window2_rect)  # Draw white rectangle as background
+        pc_score_surface = number_font.render(str(pc_score), True, (0, 0, 0))
+        number_rect = pc_score_surface.get_rect(center=window2_rect.center)
+        self.window.blit(pc_score_surface, number_rect.topleft)
+
+        # Render button
+        button_rect = pygame.Rect(button_x, button_y, button_width, button_height)
+        pygame.draw.rect(self.window, (BUTTON_COLOR), button_rect)  # Green button
+        button_text = text_font.render("Continue?", True, (0, 0, 0))
+        button_text_rect = button_text.get_rect(center=button_rect.center)
+        self.window.blit(button_text, button_text_rect)
+
+        pygame.display.flip()  # Update the display
+
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if button_rect.collidepoint(event.pos):
+                        # Restart the game
+                        self.reset_game()
+
+        # pygame.quit()
 
 
 # Exmmple usage:
 if __name__ == "__main__":
     game = GameWindow()
 
-    # result = game.welcome_screen()
+    result = game.welcome_screen()
     
     
-    # if result == "human":
-    #     print("I am a human")
-    # else:
-    #     print("I am a computer")
+    if result == "human":
+        print("I am a human")
+    else:
+        print("I am a computer")
 
-    # # Call choice_screen method to display the choice screen
-    # result = game.choice_screen()
-    # print("You chose: ", result)
+    # Call choice_screen method to display the choice screen
+    result = game.choice_screen()
+    print("You chose: ", result)
 
     game.game_screen()
+
+    game.winner_screen(4, 64)
