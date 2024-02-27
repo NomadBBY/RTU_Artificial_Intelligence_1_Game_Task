@@ -7,6 +7,7 @@ class GameWindow:
 
     def __init__(self, width=600, height=350):
         self.game = pygame.init()
+        pygame.font.init()  # Initialize the font module
         self.width = width
         self.height = height
         self.window = pygame.display.set_mode((self.width, self.height))
@@ -14,13 +15,9 @@ class GameWindow:
         pygame.display.set_caption('Multiplication game')
 
     def reset_game(self):
-        self.welcome_screen()
-        result = self.choice_screen()
-        print("You chose:", result)
-        self.game_screen()
         # Reset the running variable
         self.running = True
-
+        pygame.init()  # Initialize Pygame again
 
     def welcome_screen(self):
 
@@ -269,11 +266,6 @@ class GameWindow:
                             print("Goodbye")
                             # Reset the game
                             self.running = False
-                            break  # Exit the loop
-        if not self.running:  # Check if running is set to False
-            # Reset the game
-            self.reset_game()
-                                                
                                                 
                                                 
     def winner_screen(self, human_score, pc_score):
@@ -284,7 +276,6 @@ class GameWindow:
             human_score (int): The score of the human player.
             pc_score (int): The score of the PC player.
         """
-        pygame.init()
         # Define the text
         text = "Spēlētājs uzvarēja"
 
@@ -357,34 +348,42 @@ class GameWindow:
 
         pygame.display.flip()  # Update the display
 
-        while self.running:
+        # Wait for user input
+        waiting = True
+        while waiting:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
+                    waiting = False
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if button_rect.collidepoint(event.pos):
                         # Restart the game
                         self.reset_game()
+                        waiting = False
 
-        # pygame.quit()
-
+        pygame.quit()
 
 # Exmmple usage:
 if __name__ == "__main__":
+
     game = GameWindow()
 
-    # result = game.welcome_screen()
-    
-    
-    # if result == "human":
-    #     print("I am a human")
-    # else:
-    #     print("I am a computer")
+    while game.running == True:
 
-    # # Call choice_screen method to display the choice screen
-    # result = game.choice_screen()
-    # print("You chose: ", result)
+        game = GameWindow()
 
-    game.game_screen()
+        result = game.welcome_screen()
+        
+        
+        if result == "human":
+            print("I am a human")
+        else:
+            print("I am a computer")
 
-    game.winner_screen(4, 64)
+        # Call choice_screen method to display the choice screen
+        result = game.choice_screen()
+        print("You chose: ", result)
+
+        game.game_screen()
+
+        game.winner_screen(4, 64)
