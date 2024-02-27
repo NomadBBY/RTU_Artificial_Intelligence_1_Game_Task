@@ -36,13 +36,13 @@ class GameWindow:
                     if event.button == 1:
                         # Check if button 1 is clicked
                         if button1_rect.collidepoint(event.pos):
-                            print("Button 1 clicked!")
+                            #print("Button 1 clicked!")
                             return 'human'
                         # Check if button 2 is clicked
                         elif button2_rect.collidepoint(event.pos):
-                            print("Button 2 clicked!")
+                            #print("Button 2 clicked!")
                             return 'computer'
-
+                        
             self.window.fill((BACKGROUND_COLOR))  # Fill window with color
 
             # Render text "Multiplication game"
