@@ -31,11 +31,10 @@ class GameWindow:
         title_font = pygame.font.Font(None, 50) #Font for the title text
         text_font = pygame.font.Font(None, 36) #Font for the under text
 
-        running = True
-        while running:
+        while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    running = False
+                    self.running = False
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         # Check if button 1 is clicked
@@ -96,11 +95,10 @@ class GameWindow:
         # Calculate total width of all buttons
         total_button_width = len(button_values) * button_width + (len(button_values) - 1) * button_margin
 
-        running = True
-        while running:
+        while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    running = False
+                    self.running = False
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         # Check if any button is clicked
@@ -232,11 +230,10 @@ class GameWindow:
         pygame.display.update()
 
         # Main loop to handle events
-        running = True
-        while running:
+        while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    running = False
+                    self.running = False
                     break  # Exit the loop if running is set to False
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
@@ -266,16 +263,16 @@ class GameWindow:
                                 self.window.fill((200, 200, 200), rect=window2_rect)  # Clear previous number for window 2
                                 self.window.blit(number2_text, number2_text_rect)
 
-                               pygame.display.update()
+                                pygame.display.update()
                         # Check if either number is >= 1000
                         if number1 >= 1000 or number2 >= 1000:
                             print("Goodbye")
                             # Reset the game
-                            running = False
+                            self.running = False
                             break  # Exit the loop
-    if not running:  # Check if running is set to False
-        # Reset the game
-        self.reset_game()
+        if not self.running:  # Check if running is set to False
+            # Reset the game
+            self.reset_game()
                                                 
                                                 
                                                 
@@ -360,11 +357,10 @@ class GameWindow:
 
         pygame.display.flip()  # Update the display
 
-        running = True
-        while running:
+        while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    running = False
+                    self.running = False
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if button_rect.collidepoint(event.pos):
                         # Restart the game
@@ -377,17 +373,17 @@ class GameWindow:
 if __name__ == "__main__":
     game = GameWindow()
 
-    result = game.welcome_screen()
+    # result = game.welcome_screen()
     
     
-    if result == "human":
-        print("I am a human")
-    else:
-        print("I am a computer")
+    # if result == "human":
+    #     print("I am a human")
+    # else:
+    #     print("I am a computer")
 
-    # Call choice_screen method to display the choice screen
-    result = game.choice_screen()
-    print("You chose: ", result)
+    # # Call choice_screen method to display the choice screen
+    # result = game.choice_screen()
+    # print("You chose: ", result)
 
     game.game_screen()
 
