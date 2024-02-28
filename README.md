@@ -9,11 +9,10 @@ This is a simple text-based game where the player chooses a number and then mult
 
 ## How to Play
 
-1. Run the script `main.py` from new_game folder.
-2. Follow the prompts to input a number between 5 and 15.
-3. Choose whether to multiply your number by 2 or 3.
-4. Repeat steps 2 and 3 until a player reaches a score of 1000 or more.
-5. The game will display the final scores and declare the winner.
+1. Ensure you have Pygame installed. If not, you can install it using pip:
+```pip install pygame```
+
+
 
 ## Classes
 
