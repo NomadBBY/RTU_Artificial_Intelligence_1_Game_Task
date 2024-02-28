@@ -227,8 +227,8 @@ class GameWindow:
         pygame.display.update()
 
         # Initialize scores
-        self.score1 = 1
-        self.score2 = 1
+        self.score1 = 0
+        self.score2 = 0
 
         # Main loop to handle events
         while self.running:
@@ -262,6 +262,8 @@ class GameWindow:
                                         print("Number is odd!")
                                         self.score1 -= 1
                                 
+                                #Šis pogas būs datoram un tās netiks izmanotas to vajag izkomenēt kad tiks radīts AI Algorithm
+
                                 elif i == 2:
                                     print(f"Button {i + 1} clicked!")
                                     number2 *= 2  # Double the number for window 2
@@ -408,6 +410,7 @@ if __name__ == "__main__":
     game = GameWindow()
 
     while game.running:
+        
         game = GameWindow()
         result = game.welcome_screen()
         
