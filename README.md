@@ -11,45 +11,48 @@ This is a simple text-based game where the player chooses a number and then mult
 
 1. Ensure you have Pygame installed. If not, you can install it using pip:
 ```pip install pygame```
-
-
+2. Navigate to the new_game folder.
+3. Run the script main.py using Python 3:
+```python3 main.py```
+Follow the prompts to input a number between 5 and 15.
+4. Choose whether to multiply your number by 2 or 3.
+5. Repeat steps 4 and 5 until a player reaches a score of 1000 or more.
+6. The game will display the final scores and declare the winner.
 
 ## Classes
 
-### Player
-
-- Represents a player in the game.
-- Contains attributes for the human player and the computer player.
-
-### AiAlgorithm
-
-- Placeholder for AI algorithm class (currently not implemented).
-
-### Game
-
-- Represents the game environment.
-- Manages the flow of the game, including user input and score calculation.
-
-## How to Run
-
-Ensure you have Python installed on your machine. Run the script `multiplication_game.py` using your preferred Python interpreter.
+GameWindow - Handles all of the logic and rendering in the game
 
 ## Dependencies
 
 - Python 3.x
-- `os` module
-- `time` module
+- `pygame` module
 
 ## Example
 
-```python
-from os import system
-import time
-
-# Main part of the code
+```
+# Inside the if __name__ == "__main__": block
 if __name__ == "__main__":
-    new_game = Game()  # Creating an instance of the Game class
-    new_game.start_game()  # Starting the game
+
+    game = GameWindow()
+
+    while game.running:
+        game = GameWindow()
+        result = game.welcome_screen()
+        
+        if result == "human":
+            print("I am a human")
+        else:
+            print("I am a computer")
+
+        result = game.choice_screen()
+        print("You chose: ", result)
+
+        # Capture the returned scores
+        score1, score2 = game.game_screen(result)
+
+        # Call winner_screen with the captured scores
+        game.winner_screen(score1, score2)
 ```
 
 ## Contributions
