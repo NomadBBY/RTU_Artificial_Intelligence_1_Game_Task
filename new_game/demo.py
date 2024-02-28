@@ -134,7 +134,7 @@ class GameWindow:
 
         pygame.quit()
 
-    def game_screen(self):
+    def game_screen(self, number):
 
         text_font = pygame.font.Font(None, 45)  # Font for the text
         number_font = pygame.font.Font(None, 30)  # Font for the number
@@ -211,7 +211,7 @@ class GameWindow:
         # Render the window under buttons with number 1
         window1_rect = pygame.Rect(80, 200, 165, 50)
         pygame.draw.rect(self.window, (200, 200, 200), window1_rect)
-        number1 = 1  # Initial number for window 1
+        number1 = number  # Initial number for window 1
         number1_text = number_font.render(str(number1), True, (0, 0, 0))
         number1_text_rect = number1_text.get_rect(center=window1_rect.center)
         self.window.blit(number1_text, number1_text_rect)
@@ -219,12 +219,16 @@ class GameWindow:
         # Render the window under buttons with number 1
         window2_rect = pygame.Rect(360, 200, 165, 50)
         pygame.draw.rect(self.window, (200, 200, 200), window2_rect)
-        number2 = 1  # Initial number for window 2
+        number2 = number  # Initial number for window 2
         number2_text = number_font.render(str(number2), True, (0, 0, 0))
         number2_text_rect = number2_text.get_rect(center=window2_rect.center)
         self.window.blit(number2_text, number2_text_rect)
 
         pygame.display.update()
+
+        # Initialize scores
+        self.score1 = 1
+        self.score2 = 1
 
         # Main loop to handle events
         while self.running:
@@ -237,18 +241,46 @@ class GameWindow:
                         # Check if any button is clicked
                         for i, rect in enumerate(button_rects):
                             if rect.collidepoint(event.pos):
+
                                 if i == 0:
                                     print(f"Button {i + 1} clicked!")
                                     number1 *= 2  # Double the number for window 1
+                                    if number1 % 2 == 0:
+                                        print("Number is even!")  # Print if number1 is even
+                                        self.score1 += 1  # Increment score1 if number1 is divisible by 2
+                                    else:
+                                        print("Number is odd!")
+                                        self.score1 -= 1
+                                
                                 elif i == 1:
                                     print(f"Button {i + 1} clicked!")
                                     number1 *= 3  # Triple the number for window 1
+                                    if number1 % 2 == 0:
+                                        print("Number is even!")  # Print if number1 is even
+                                        self.score1 += 1  # Increment score1 if number1 is divisible by 2
+                                    else:
+                                        print("Number is odd!")
+                                        self.score1 -= 1
+                                
                                 elif i == 2:
                                     print(f"Button {i + 1} clicked!")
                                     number2 *= 2  # Double the number for window 2
+                                    if number1 % 2 == 0:
+                                        print("Number is even!")  # Print if number1 is even
+                                        self.score2 += 1  # Increment score1 if number1 is divisible by 2
+                                    else:
+                                        print("Number is odd!")
+                                        self.score2 -= 1
+                                
                                 elif i == 3:
                                     print(f"Button {i + 1} clicked!")
                                     number2 *= 3  # Triple the number for window 2
+                                    if number1 % 2 == 0:
+                                        print("Number is even!")  # Print if number1 is even
+                                        self.score2 += 1  # Increment score1 if number1 is divisible by 2
+                                    else:
+                                        print("Number is odd!")
+                                        self.score2 -= 1
 
                                 # Update the numbers displayed in the windows
                                 number1_text = number_font.render(str(number1), True, (0, 0, 0))
@@ -261,13 +293,14 @@ class GameWindow:
                                 self.window.blit(number2_text, number2_text_rect)
 
                                 pygame.display.update()
-                        # Check if either number is >= 1000
+
+                        # Check if either score is >= 1000
                         if number1 >= 1000 or number2 >= 1000:
                             print("Goodbye")
                             # Reset the game
                             self.running = False
-                                                
-                                                
+                            return self.score1, self.score2
+                                                                                             
     def winner_screen(self, human_score, pc_score):
         """
         Display a winner screen with human and PC scores and a continue button.
@@ -276,8 +309,13 @@ class GameWindow:
             human_score (int): The score of the human player.
             pc_score (int): The score of the PC player.
         """
-        # Define the text
-        text = "Spēlētājs uzvarēja"
+        # Define the text based on the comparison of scores
+        if score1 < score2:
+            text = "Spēlētājs uzvarēja"  # Player 1 wins
+        elif score1 > score2:
+            text = "Dators uzvarēja"  # Player 2 wins
+        else:
+            text = "Viens spēlētājs uzvarēja"  # One player wins
 
         # Define headline position
         text_x = 300
@@ -363,27 +401,27 @@ class GameWindow:
 
         pygame.quit()
 
-# Exmmple usage:
+
+# Inside the if __name__ == "__main__": block
 if __name__ == "__main__":
 
     game = GameWindow()
 
-    while game.running == True:
-
+    while game.running:
         game = GameWindow()
-
         result = game.welcome_screen()
-        
         
         if result == "human":
             print("I am a human")
         else:
             print("I am a computer")
 
-        # Call choice_screen method to display the choice screen
         result = game.choice_screen()
         print("You chose: ", result)
 
-        game.game_screen()
+        # Capture the returned scores
+        score1, score2 = game.game_screen(result)
 
-        game.winner_screen(4, 64)
+        # Call winner_screen with the captured scores
+        game.winner_screen(score1, score2)
+

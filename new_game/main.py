@@ -1,5 +1,3 @@
-from os import system  # Importing system function from the os module
-import time  # Importing time module
 import pygame
 
 BACKGROUND_COLOR = 225, 217, 196
@@ -135,175 +133,295 @@ class GameWindow:
             pygame.display.update()
 
         pygame.quit()
-        
-class Player:
-    def __init__(self, choice):
 
-        self.choice = choice  # Initialize the player's choice
+    def game_screen(self, number):
 
-    def score(self):
+        text_font = pygame.font.Font(None, 45)  # Font for the text
+        number_font = pygame.font.Font(None, 30)  # Font for the number
+
+        # Define button parameters
+        button_width = 60
+        button_height = 35
+        button_color = BUTTON_COLOR
+        button_font = pygame.font.Font(None, 24)
+
+        # Clear the screen
+        self.window.fill(BACKGROUND_COLOR)
+
+        # Manual input for text positions
+        text1_x = 100
+        text1_y = 100
+
+        text2_x = 400
+        text2_y = 100
+
+        # Render text "Spēlētājs"
+        text1 = text_font.render("Spēlētājs", True, (0, 0, 0))
+        text1_rect = text1.get_rect(topleft=(text1_x, text1_y))
+        self.window.blit(text1, text1_rect)
+
+        # Render text "Dators"
+        text2 = text_font.render("Dators", True, (0, 0, 0))
+        text2_rect = text2.get_rect(topleft=(text2_x, text2_y))
+        self.window.blit(text2, text2_rect)
+
+        button1_x = 80
+        button1_y = 150
+
+        button2_x = 180
+        button2_y = 150
+
+        button3_x = 360
+        button3_y = 150
+
+        button4_x = 460
+        button4_y = 150
+
+        # Render buttons
+        button_rects = []  # List to store button rects for collision detection
+
+        button_rect = pygame.Rect(button1_x, button1_y, button_width, button_height)
+        pygame.draw.rect(self.window, button_color, button_rect)
+        button_text = button_font.render("x2", True, (0, 0, 0))
+        button_text_rect = button_text.get_rect(center=button_rect.center)
+        self.window.blit(button_text, button_text_rect)
+        button_rects.append(button_rect)
+
+        button_rect = pygame.Rect(button2_x, button2_y, button_width, button_height)
+        pygame.draw.rect(self.window, button_color, button_rect)
+        button_text = button_font.render("x3", True, (0, 0, 0))
+        button_text_rect = button_text.get_rect(center=button_rect.center)
+        self.window.blit(button_text, button_text_rect)
+        button_rects.append(button_rect)
+
+        button_rect = pygame.Rect(button3_x, button3_y, button_width, button_height)
+        pygame.draw.rect(self.window, button_color, button_rect)
+        button_text = button_font.render("x2", True, (0, 0, 0))
+        button_text_rect = button_text.get_rect(center=button_rect.center)
+        self.window.blit(button_text, button_text_rect)
+        button_rects.append(button_rect)
+
+        button_rect = pygame.Rect(button4_x, button4_y, button_width, button_height)
+        pygame.draw.rect(self.window, button_color, button_rect)
+        button_text = button_font.render("x3", True, (0, 0, 0))
+        button_text_rect = button_text.get_rect(center=button_rect.center)
+        self.window.blit(button_text, button_text_rect)
+        button_rects.append(button_rect)
+
+        # Render the window under buttons with number 1
+        window1_rect = pygame.Rect(80, 200, 165, 50)
+        pygame.draw.rect(self.window, (200, 200, 200), window1_rect)
+        number1 = number  # Initial number for window 1
+        number1_text = number_font.render(str(number1), True, (0, 0, 0))
+        number1_text_rect = number1_text.get_rect(center=window1_rect.center)
+        self.window.blit(number1_text, number1_text_rect)
+
+        # Render the window under buttons with number 1
+        window2_rect = pygame.Rect(360, 200, 165, 50)
+        pygame.draw.rect(self.window, (200, 200, 200), window2_rect)
+        number2 = number  # Initial number for window 2
+        number2_text = number_font.render(str(number2), True, (0, 0, 0))
+        number2_text_rect = number2_text.get_rect(center=window2_rect.center)
+        self.window.blit(number2_text, number2_text_rect)
+
+        pygame.display.update()
+
+        # Initialize scores
+        self.score1 = 1
+        self.score2 = 1
+
+        # Main loop to handle events
+        while self.running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
+                    break  # Exit the loop if running is set to False
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        # Check if any button is clicked
+                        for i, rect in enumerate(button_rects):
+                            if rect.collidepoint(event.pos):
+
+                                if i == 0:
+                                    print(f"Button {i + 1} clicked!")
+                                    number1 *= 2  # Double the number for window 1
+                                    if number1 % 2 == 0:
+                                        print("Number is even!")  # Print if number1 is even
+                                        self.score1 += 1  # Increment score1 if number1 is divisible by 2
+                                    else:
+                                        print("Number is odd!")
+                                        self.score1 -= 1
+                                
+                                elif i == 1:
+                                    print(f"Button {i + 1} clicked!")
+                                    number1 *= 3  # Triple the number for window 1
+                                    if number1 % 2 == 0:
+                                        print("Number is even!")  # Print if number1 is even
+                                        self.score1 += 1  # Increment score1 if number1 is divisible by 2
+                                    else:
+                                        print("Number is odd!")
+                                        self.score1 -= 1
+                                
+                                elif i == 2:
+                                    print(f"Button {i + 1} clicked!")
+                                    number2 *= 2  # Double the number for window 2
+                                    if number1 % 2 == 0:
+                                        print("Number is even!")  # Print if number1 is even
+                                        self.score2 += 1  # Increment score1 if number1 is divisible by 2
+                                    else:
+                                        print("Number is odd!")
+                                        self.score2 -= 1
+                                
+                                elif i == 3:
+                                    print(f"Button {i + 1} clicked!")
+                                    number2 *= 3  # Triple the number for window 2
+                                    if number1 % 2 == 0:
+                                        print("Number is even!")  # Print if number1 is even
+                                        self.score2 += 1  # Increment score1 if number1 is divisible by 2
+                                    else:
+                                        print("Number is odd!")
+                                        self.score2 -= 1
+
+                                # Update the numbers displayed in the windows
+                                number1_text = number_font.render(str(number1), True, (0, 0, 0))
+                                number2_text = number_font.render(str(number2), True, (0, 0, 0))
+
+                                self.window.fill((200, 200, 200), rect=window1_rect)  # Clear previous number for window 1
+                                self.window.blit(number1_text, number1_text_rect)
+
+                                self.window.fill((200, 200, 200), rect=window2_rect)  # Clear previous number for window 2
+                                self.window.blit(number2_text, number2_text_rect)
+
+                                pygame.display.update()
+
+                        # Check if either score is >= 1000
+                        if number1 >= 1000 or number2 >= 1000:
+                            print("Goodbye")
+                            # Reset the game
+                            self.running = False
+                            return self.score1, self.score2
+                                                                                             
+    def winner_screen(self, human_score, pc_score):
         """
-        Returns the player's choice.
+        Display a winner screen with human and PC scores and a continue button.
+
+        Args:
+            human_score (int): The score of the human player.
+            pc_score (int): The score of the PC player.
         """
-        return self.choice
-
-class AiAlgorithm:
-    """
-    Placeholder for AI algorithm class.
-    """
-    pass
-
-
-class Game:
-    """
-    Class representing the game.
-    """
-
-    def __init__(self):
-        """
-        Initializes the game with default settings.
-        """
-        self.game_state = True  # Initializing game_state attribute as True
-        self.game_window = GameWindow()  # Create an instance of the GameWindow
-        self.choice = self.game_window.welcome_screen()  # Obtain player's choice from welcome screen
-        self.player = Player(self.choice)  # Creating an instance of the Player class with obtained choice
-        print(self.player.choice)
-
-        # Initialize score dictionary based on player's choice
-        if self.choice == 'human':
-            self.score = {self.player.choice: 0, 'computer': 0}
+        # Define the text based on the comparison of scores
+        if score1 < score2:
+            text = "Spēlētājs uzvarēja"  # Player 1 wins
+        elif score1 > score2:
+            text = "Dators uzvarēja"  # Player 2 wins
         else:
-            self.score = {'human': 0, self.player.choice: 0}
+            text = "Viens spēlētājs uzvarēja"  # One player wins
 
-    def user_choice(self):
-        """
-        Prompts the user to input a number between 5 and 15.
-        """
-        choice = self.game_window.choice_screen()
-        return choice
+        # Define headline position
+        text_x = 300
+        text_y = 85
 
-    def update_score(self, player, choice):
-        """
-        Updates the score based on the player and their choice.
-        """
-        if player == 'human':
-            self.score[self.player.choice] += choice
-        elif player == 'computer':
-            self.score['computer'] += choice
-        return self.score
+        # Define text positions
+        text1_x = 150
+        text1_y = 160
 
-    def start_game(self):
-        """
-        Starts the game.
-        """
-        turn = self.player.choice  # Start with human's turn
-        total_score = 0  # Initializing total_score variable
+        text2_x = 450
+        text2_y = 160
 
-        choice = self.user_choice()  # Getting user choice
-        print("Number chosen by human:", choice)  # Printing the chosen number
-        print()
+        # Define window positions
+        window1_x = 100
+        window1_y = 200
 
-        while self.game_state and total_score < 1000:
+        window2_x = 420
+        window2_y = 200
 
-            if turn == 'human':
-                print('Human\'s turn\n')
+        # Define button position and size
+        button_x = 200
+        button_y = 280
+        button_width = 200
+        button_height = 50
 
-                multiply = int(input("Would you like to multiply with 2 or 3? : "))  # Asking for user input
-                if multiply == 2:
-                    choice *= 2  # Multiplying the choice by 2
-                    total_score += choice  # Updating the total score
-                    print("Total score after multiply by 2:", total_score, '\n')  # Printing total score
-                    if choice % 2 == 0:
-                        print("Human gets 1 point")  # Printing message
-                        self.update_score(self.player.choice, 1)  # Updating human's score by 1
-                        print("Human's current score:", self.score[self.player.choice], '\n')  # Printing human's current score
-                        time.sleep(5)  # Pausing execution for 5 seconds
-                        turn = 'computer'  # Switching to computer's turn
-                    else:
-                        print("Human loses 1 point")  # Printing message
-                        self.update_score(self.player.choice, -1)  # Updating human's score by -1
-                        print("Human's current score:", self.score[self.player.choice], '\n')  # Printing human's current score
-                        time.sleep(5)  # Pausing execution for 5 seconds
-                        turn = 'computer'  # Switching to computer's turn
+        self.window.fill(BACKGROUND_COLOR)
+        headline_text = pygame.font.Font(None, 45)
+        text_surface = headline_text.render(text, True, (0, 0, 0))
 
-                elif multiply == 3:
-                    choice *= 3  # Multiplying the choice by 3
-                    total_score += choice  # Updating the total score
-                    print("Total score after multiply by 3:", total_score, '\n')  # Printing total score
-                    if choice % 2 == 0:
-                        print("Human gets 1 point")  # Printing message
-                        self.update_score(self.player.choice, 1)  # Updating human's score by 1
-                        print("Human's current score:", self.score[self.player.choice], '\n')  # Printing human's current score
-                        time.sleep(5)  # Pausing execution for 5 seconds
-                        turn = 'computer'  # Switching to computer's turn
-                    else:
-                        print("Human loses 1 point")  # Printing message
-                        self.update_score(self.player.choice, -1)  # Updating human's score by -1
-                        print("Human's current score:", self.score[self.player.choice], '\n')  # Printing human's current score
-                        time.sleep(5)  # Pausing execution for 5 seconds
-                        turn = 'computer'  # Switching to computer's turn
+        text_font = pygame.font.Font(None, 35)
+        # Set the text position
+        text_rect = text_surface.get_rect(center=(text_x, text_y))
+        self.window.blit(text_surface, text_rect)
 
-                else:
-                    print("Invalid choice. Please try again.")  # Printing message
-                    continue  # Restart the loop if the choice is invalid
+        # Render "Human Result" text
+        text_surface = text_font.render("Human Result", True, (0, 0, 0))
+        text_rect = text_surface.get_rect(center=(text1_x, text1_y))
+        self.window.blit(text_surface, text_rect)
 
-            elif turn == 'computer':
-                print('Computer\'s turn\n')
+        # Render "PC Result" text
+        text_surface = text_font.render("PC Result", True, (0, 0, 0))
+        text_rect = text_surface.get_rect(center=(text2_x, text2_y))
+        self.window.blit(text_surface, text_rect)
 
-                multiply = int(input("Would you like to multiply with 2 or 3? : "))  # Asking for user input
-                if multiply == 2:
-                    choice *= 2  # Multiplying the choice by 2
-                    total_score += choice  # Updating the total score
-                    print("Total score after multiply by 2:", total_score, '\n')  # Printing total score
-                    if choice % 2 == 0:
-                        print("Computer gets 1 point")  # Printing message
-                        self.update_score('computer', 1)  # Updating computer's score by 1
-                        print("Computer's current score:", self.score['computer'], '\n')  # Printing computer's current score
-                        time.sleep(5)  # Pausing execution for 5 seconds
-                        turn = 'human'  # Switching to human's turn
-                    else:
-                        print("Computer loses 1 point")  # Printing message
-                        self.update_score('computer', -1)  # Updating computer's score by -1
-                        print("Computer's current score:", self.score['computer'], '\n')  # Printing computer's current score
-                        time.sleep(5)  # Pausing execution for 5 seconds
-                        turn = 'human'  # Switching to human's turn
+        # Render windows with scores
+        number_font = pygame.font.Font(None, 24)
 
-                elif multiply == 3:
-                    choice *= 3  # Multiplying the choice by 3
-                    total_score += choice  # Updating the total score
-                    print("Total score after multiply by 3:", total_score, '\n')  # Printing total score
-                    if choice % 2 == 0:
-                        print("Computer gets 1 point")  # Printing message
-                        self.update_score('computer', 1)  # Updating computer's score by 1
-                        print("Computer's current score:", self.score['computer'], '\n')  # Printing computer's current score
-                        time.sleep(5)  # Pausing execution for 5 seconds
-                        turn = 'human'  # Switching to human's turn
-                    else:
-                        print("Computer loses 1 point")  # Printing message
-                        self.update_score('computer', -1)  # Updating computer's score by -1
-                        print("Computer's current score:", self.score['computer'], '\n')  # Printing computer's current score
-                        time.sleep(5)  # Pausing execution for 5 seconds
-                        turn = 'human'  # Switching to human's turn
+        # Render window 1 with human score
+        window1_rect = pygame.Rect(window1_x, window1_y, 90, 35)
+        pygame.draw.rect(self.window, (255, 255, 255), window1_rect)  # Draw white rectangle as background
+        human_score_surface = number_font.render(str(human_score), True, (0, 0, 0))
+        number_rect = human_score_surface.get_rect(center=window1_rect.center)
+        self.window.blit(human_score_surface, number_rect.topleft)
 
-                else:
-                    print("Invalid choice. Please try again.")  # Printing message
-                    continue  # Restart the loop if the choice is invalid
+        # Render window 2 with PC score
+        window2_rect = pygame.Rect(window2_x, window2_y, 90, 35)
+        pygame.draw.rect(self.window, (255, 255, 255), window2_rect)  # Draw white rectangle as background
+        pc_score_surface = number_font.render(str(pc_score), True, (0, 0, 0))
+        number_rect = pc_score_surface.get_rect(center=window2_rect.center)
+        self.window.blit(pc_score_surface, number_rect.topleft)
 
-        print("Human score: ", self.score[self.player.choice])
-        print("Computer score: ", self.score['computer'])            
-        time.sleep(5)
-            
-        if self.score[self.player.choice] < self.score['computer']:
-            print("Computer wins with a score of:", self.score['computer'])  # Printing message if computer wins
-        elif self.score[self.player.choice] > self.score['computer']:
-            print("Human wins with a score of:", self.score[self.player.choice])  # Printing message if human wins
-        else:
-            print("It's a tie!")  # Printing message if it's a tie
-        
-        print("Goodbye!")
+        # Render button
+        button_rect = pygame.Rect(button_x, button_y, button_width, button_height)
+        pygame.draw.rect(self.window, (BUTTON_COLOR), button_rect)  # Green button
+        button_text = text_font.render("Continue?", True, (0, 0, 0))
+        button_text_rect = button_text.get_rect(center=button_rect.center)
+        self.window.blit(button_text, button_text_rect)
 
-# Main part of the code
+        pygame.display.flip()  # Update the display
+
+        # Wait for user input
+        waiting = True
+        while waiting:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
+                    waiting = False
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if button_rect.collidepoint(event.pos):
+                        # Restart the game
+                        self.reset_game()
+                        waiting = False
+
+        pygame.quit()
+
+
+# Inside the if __name__ == "__main__": block
 if __name__ == "__main__":
 
-    new_game = Game()
-    new_game.start_game()
+    game = GameWindow()
+
+    while game.running:
+        game = GameWindow()
+        result = game.welcome_screen()
+        
+        if result == "human":
+            print("I am a human")
+        else:
+            print("I am a computer")
+
+        result = game.choice_screen()
+        print("You chose: ", result)
+
+        # Capture the returned scores
+        score1, score2 = game.game_screen(result)
+
+        # Call winner_screen with the captured scores
+        game.winner_screen(score1, score2)
+
