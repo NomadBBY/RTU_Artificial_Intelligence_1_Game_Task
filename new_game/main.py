@@ -370,7 +370,7 @@ class GameWindow:
         # Render button
         button_rect = pygame.Rect(button_x, button_y, button_width, button_height)
         pygame.draw.rect(self.window, (BUTTON_COLOR), button_rect)  # Green button
-        button_text = text_font.render("Continue?", True, (0, 0, 0))
+        button_text = text_font.render("Turpināt?", True, (0, 0, 0))
         button_text_rect = button_text.get_rect(center=button_rect.center)
         self.window.blit(button_text, button_text_rect)
 
