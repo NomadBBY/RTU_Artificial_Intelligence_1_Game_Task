@@ -1,16 +1,40 @@
 import pygame
+import random
+import os
 
 BACKGROUND_COLOR = 225, 217, 196
 BUTTON_COLOR = 100, 100, 100
 
 class Algorithm:
     '''
-    Place to impliment the AI Algortihm chosen for the game 
+    Implementation of the MiniMax algorithm for the game
     '''
 
     def __init__(self) -> None:
         pass
 
+    def minimax(self, state, depth, maximizing_player):
+        if depth == 0 or state.is_game_over():
+            return state.evaluate(), None
+
+        if maximizing_player:
+            max_eval = float('-inf')
+            best_move = None
+            for move in state.get_possible_moves():
+                evaluation = self.minimax(state.make_move(move), depth - 1, False)[0]
+                if evaluation > max_eval:
+                    max_eval = evaluation
+                    best_move = move
+            return max_eval, best_move
+        else:
+            min_eval = float('inf')
+            best_move = None
+            for move in state.get_possible_moves():
+                evaluation = self.minimax(state.make_move(move), depth - 1, True)[0]
+                if evaluation < min_eval:
+                    min_eval = evaluation
+                    best_move = move
+            return min_eval, best_move
 
 class GameWindow:
 
@@ -131,7 +155,7 @@ class GameWindow:
 
         pygame.quit()
 
-    def game_screen(self, number):
+    def game_screen(self, number, initial_player):
 
         text_font = pygame.font.Font(None, 45)  # Font for the text
         number_font = pygame.font.Font(None, 30)  # Font for the number
@@ -223,7 +247,22 @@ class GameWindow:
 
         pygame.display.update()
 
+        def render_player_one():
+            # Update the numbers displayed in the windows
+            number1_text = number_font.render(str(number1), True, (0, 0, 0))
+            self.window.fill((200, 200, 200), rect=window1_rect)  # Clear previous number for window 1
+            self.window.blit(number1_text, number1_text_rect)
+            pygame.display.update()
+
+        def render_player_two():
+            # Update the numbers displayed in the windows
+            number2_text = number_font.render(str(number2), True, (0, 0, 0))
+            self.window.fill((200, 200, 200), rect=window2_rect)  # Clear previous number for window 2
+            self.window.blit(number2_text, number2_text_rect)
+            pygame.display.update()
+
         # Initialize scores
+        self.turn = initial_player
         self.score1 = 0
         self.score2 = 0
 
@@ -233,73 +272,68 @@ class GameWindow:
                 if event.type == pygame.QUIT:
                     self.running = False
                     break  # Exit the loop if running is set to False
+                
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1:
-                        # Check if any button is clicked
-                        for i, rect in enumerate(button_rects):
+                    if self.turn == 'human':
+                        # Human's turn
+                        # Check if the first two buttons are clicked
+                        for i, rect in enumerate(button_rects[:2]):
                             if rect.collidepoint(event.pos):
-
+                                print(f"Button {i + 1} clicked!")
                                 if i == 0:
-                                    print(f"Button {i + 1} clicked!")
                                     number1 *= 2  # Double the number for window 1
-                                    if number1 % 2 == 0:
-                                        print("Number is even!")  # Print if number1 is even
-                                        self.score1 += 1  # Increment score1 if number1 is divisible by 2
-                                    else:
-                                        print("Number is odd!")
-                                        self.score1 -= 1
-                                
                                 elif i == 1:
-                                    print(f"Button {i + 1} clicked!")
                                     number1 *= 3  # Triple the number for window 1
-                                    if number1 % 2 == 0:
-                                        print("Number is even!")  # Print if number1 is even
-                                        self.score1 += 1  # Increment score1 if number1 is divisible by 2
-                                    else:
-                                        print("Number is odd!")
-                                        self.score1 -= 1
-                                
-                                #Šis pogas būs datoram un tās netiks izmanotas to vajag izkomenēt kad tiks radīts AI Algorithm
-
-                                elif i == 2:
-                                    print(f"Button {i + 1} clicked!")
-                                    number2 *= 2  # Double the number for window 2
-                                    if number1 % 2 == 0:
-                                        print("Number is even!")  # Print if number1 is even
-                                        self.score2 += 1  # Increment score1 if number1 is divisible by 2
-                                    else:
-                                        print("Number is odd!")
-                                        self.score2 -= 1
-                                
-                                elif i == 3:
-                                    print(f"Button {i + 1} clicked!")
-                                    number2 *= 3  # Triple the number for window 2
-                                    if number1 % 2 == 0:
-                                        print("Number is even!")  # Print if number1 is even
-                                        self.score2 += 1  # Increment score1 if number1 is divisible by 2
-                                    else:
-                                        print("Number is odd!")
-                                        self.score2 -= 1
+                                # Update the score based on the parity of the number
+                                if number1 % 2 == 0:
+                                    print("Number is even!")
+                                    self.score1 += 1
+                                else:
+                                    print("Number is odd!")
+                                    self.score1 -= 1
+                                # Update turn
+                                self.turn = 'computer'
 
                                 # Update the numbers displayed in the windows
-                                number1_text = number_font.render(str(number1), True, (0, 0, 0))
-                                number2_text = number_font.render(str(number2), True, (0, 0, 0))
+                                render_player_one()
 
-                                self.window.fill((200, 200, 200), rect=window1_rect)  # Clear previous number for window 1
-                                self.window.blit(number1_text, number1_text_rect)
+                                break
+                            
+            # Handle computer's turn outside of the event loop
+            if self.turn == 'computer':
+                print("Computer is thinking...")
+                pygame.display.update()
+                pygame.time.delay(1000)  # Add a delay of 1000 milliseconds (1 second)
 
-                                self.window.fill((200, 200, 200), rect=window2_rect)  # Clear previous number for window 2
-                                self.window.blit(number2_text, number2_text_rect)
+                # Computer's turn
+                # Randomly choose between 2x or 3x for the second player
+                choice = random.choice([2, 3])
+                if choice == 2:
+                    print("Computer chose 2x!")
+                    number2 *= 2
+                else:
+                    print("Computer chose 3x!")
+                    number2 *= 3
+                # Update the score based on the parity of the number
+                if number2 % 2 == 0:
+                    print("Number is even!")
+                    self.score2 += 1
+                else:
+                    print("Number is odd!")
+                    self.score2 -= 1
+                # Update turn
+                self.turn = 'human'
 
-                                pygame.display.update()
+                # Update the numbers displayed in the windows
+                render_player_two()
 
-                        # Check if either score is >= 1000
-                        if number1 >= 1000 or number2 >= 1000:
-                            print("Goodbye")
-                            # Reset the game
-                            self.running = False
-                            return self.score1, self.score2
-                                                                                             
+            # Check if either score is >= 1000
+            if number1 >= 1000 or number2 >= 1000:
+                print("Goodbye")
+                # Reset the game
+                self.running = False
+                return self.score1, self.score2
+
     def winner_screen(self, human_score, pc_score):
         """
         Display a winner screen with human and PC scores and a continue button.
@@ -310,11 +344,11 @@ class GameWindow:
         """
         # Define the text based on the comparison of scores
         if score1 < score2:
-            text = "Spēlētājs uzvarēja"  # Player 1 wins
+            text = "Spēlētājs uzvarēja!"  # Player 1 wins
         elif score1 > score2:
-            text = "Dators uzvarēja"  # Player 2 wins
+            text = "Dators uzvarēja!"  # Player 2 wins
         else:
-            text = "Viens spēlētājs uzvarēja"  # One player wins
+            text = "Neizšķirts!"  # One player wins
 
         # Define headline position
         text_x = 300
@@ -401,27 +435,18 @@ class GameWindow:
         pygame.quit()
 
 
-# Inside the if __name__ == "__main__": block
+# Inside the __name__ == "__main__" block
+        
 if __name__ == "__main__":
-
     game = GameWindow()
 
     while game.running:
-        
         game = GameWindow()
-        result = game.welcome_screen()
-        
-        if result == "human":
-            print("I am a human")
-        else:
-            print("I am a computer")
-
+        initial_player = game.welcome_screen()  # Get the initial player's turn
         result = game.choice_screen()
         print("You chose: ", result)
-
-        # Capture the returned scores
-        score1, score2 = game.game_screen(result)
-
-        # Call winner_screen with the captured scores
+        os.system('cls')
+        score1, score2 = game.game_screen(result, initial_player)  # Pass the initial player's turn to game_screen
         game.winner_screen(score1, score2)
+
 
