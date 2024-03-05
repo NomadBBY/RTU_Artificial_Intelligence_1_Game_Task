@@ -227,8 +227,8 @@ class GameWindow:
         pygame.display.update()
 
         # Initialize scores
-        self.score1 = 1
-        self.score2 = 1
+        self.score1 = 0
+        self.score2 = 0
 
         # Main loop to handle events
         while self.running:
