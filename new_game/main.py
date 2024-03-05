@@ -3,6 +3,15 @@ import pygame
 BACKGROUND_COLOR = 225, 217, 196
 BUTTON_COLOR = 100, 100, 100
 
+class Algorithm:
+    '''
+    Place to impliment the AI Algortihm chosen for the game 
+    '''
+
+    def __init__(self) -> None:
+        pass
+
+
 class GameWindow:
 
     def __init__(self, width=600, height=350):
