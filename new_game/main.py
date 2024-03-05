@@ -5,12 +5,34 @@ BUTTON_COLOR = 100, 100, 100
 
 class Algorithm:
     '''
-    Place to impliment the AI Algortihm chosen for the game 
+    Implementation of the MiniMax algorithm for the game
     '''
 
     def __init__(self) -> None:
         pass
 
+    def minimax(self, state, depth, maximizing_player):
+        if depth == 0 or state.is_game_over():
+            return state.evaluate(), None
+
+        if maximizing_player:
+            max_eval = float('-inf')
+            best_move = None
+            for move in state.get_possible_moves():
+                evaluation = self.minimax(state.make_move(move), depth - 1, False)[0]
+                if evaluation > max_eval:
+                    max_eval = evaluation
+                    best_move = move
+            return max_eval, best_move
+        else:
+            min_eval = float('inf')
+            best_move = None
+            for move in state.get_possible_moves():
+                evaluation = self.minimax(state.make_move(move), depth - 1, True)[0]
+                if evaluation < min_eval:
+                    min_eval = evaluation
+                    best_move = move
+            return min_eval, best_move
 
 class GameWindow:
 
