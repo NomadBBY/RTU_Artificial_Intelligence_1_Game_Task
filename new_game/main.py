@@ -13,15 +13,24 @@ class Algorithm:
     def __init__(self) -> None:
         pass
 
-    def minimax(self, state, depth, maximizing_player):
-        if depth == 0 or state.is_game_over():
-            return state.evaluate(), None
+    def minimax(self, number1, number2, turn, depth, maximizing_player):
+        if depth == 0 or (number1 >= 1000 or number2 >= 1000):
+            # Evaluate the current state
+            # The computer (maximizing player) wants a lower score than the human
+            if number1 >= 1000:
+                return 1, None  # Human wins (computer loses, higher score)
+            elif number2 >= 1000:
+                return -1, None  # Computer wins (lower score)
+            else:
+                # Compare the scores and return a value based on who has the lower score
+                return (number2 - number1) / max(number1, number2), None
 
         if maximizing_player:
             max_eval = float('-inf')
             best_move = None
-            for move in state.get_possible_moves():
-                evaluation = self.minimax(state.make_move(move), depth - 1, False)[0]
+            for move in self.get_possible_moves(number1, turn):
+                new_number1 = self.make_move(number1, move)
+                evaluation = self.minimax(new_number1, number2, 'computer', depth - 1, False)[0]
                 if evaluation > max_eval:
                     max_eval = evaluation
                     best_move = move
@@ -29,17 +38,23 @@ class Algorithm:
         else:
             min_eval = float('inf')
             best_move = None
-            for move in state.get_possible_moves():
-                evaluation = self.minimax(state.make_move(move), depth - 1, True)[0]
+            for move in self.get_possible_moves(number2, turn):
+                new_number2 = self.make_move(number2, move)
+                evaluation = self.minimax(number1, new_number2, 'human', depth - 1, True)[0]
                 if evaluation < min_eval:
                     min_eval = evaluation
                     best_move = move
             return min_eval, best_move
 
+    def get_possible_moves(self, number, turn):
+        return [2, 3]  # The possible moves are always 2x and 3x
+
+    def make_move(self, number, move):
+        return number * move
+
 class GameWindow:
 
     def __init__(self, width=600, height=350):
-        #self.game = pygame.init()
         pygame.font.init()  # Initialize the font module
         self.width = width
         self.height = height
@@ -266,13 +281,16 @@ class GameWindow:
         self.score1 = 0
         self.score2 = 0
 
+        # Create an instance of the MiniMax algorithm
+        algo = Algorithm()
+
         # Main loop to handle events
         while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
                     break  # Exit the loop if running is set to False
-                
+
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if self.turn == 'human':
                         # Human's turn
@@ -284,6 +302,7 @@ class GameWindow:
                                     number1 *= 2  # Double the number for window 1
                                 elif i == 1:
                                     number1 *= 3  # Triple the number for window 1
+
                                 # Update the score based on the parity of the number
                                 if number1 % 2 == 0:
                                     print("Number is even!")
@@ -291,48 +310,42 @@ class GameWindow:
                                 else:
                                     print("Number is odd!")
                                     self.score1 -= 1
-                                # Update turn
-                                self.turn = 'computer'
 
                                 # Update the numbers displayed in the windows
                                 render_player_one()
 
+                                # Switch to computer's turn
+                                self.turn = 'computer'
                                 break
-                            
-            # Handle computer's turn outside of the event loop
-            if self.turn == 'computer':
-                print("Computer is thinking...")
-                pygame.display.update()
-                pygame.time.delay(1000)  # Add a delay of 1000 milliseconds (1 second)
 
-                # Computer's turn
-                # Randomly choose between 2x or 3x for the second player
-                choice = random.choice([2, 3])
-                if choice == 2:
-                    print("Computer chose 2x!")
-                    number2 *= 2
-                else:
-                    print("Computer chose 3x!")
-                    number2 *= 3
-                # Update the score based on the parity of the number
-                if number2 % 2 == 0:
-                    print("Number is even!")
-                    self.score2 += 1
-                else:
-                    print("Number is odd!")
-                    self.score2 -= 1
-                # Update turn
-                self.turn = 'human'
+                if self.turn == 'computer':
 
-                # Update the numbers displayed in the windows
-                render_player_two()
+                    print("Computer is thinking...")
+                    pygame.display.update()
+                    pygame.time.delay(1000)  # Add a delay of 1000 milliseconds (1 second)
+                    # Get the best move for the computer using MiniMax algorithm
+                    best_eval, best_move = algo.minimax(number1, number2, 'computer', 3, False)
+                    if best_move is not None:
+                        # Make the best move
+                        number2 *= best_move
+                        # Update the score based on the parity of the number
+                        if number2 % 2 == 0:
+                            print("Number is even!")
+                            self.score2 += 1
+                        else:
+                            print("Number is odd!")
+                            self.score2 -= 1
+                        # Update the numbers displayed in the windows
+                        render_player_two()
+                    # Switch to human's turn
+                    self.turn = 'human'
 
-            # Check if either score is >= 1000
-            if number1 >= 1000 or number2 >= 1000:
-                print("Goodbye")
-                # Reset the game
-                self.running = False
-                return self.score1, self.score2
+                # Check if either score is >= 1000
+                if number1 >= 1000 or number2 >= 1000:
+                    print("Goodbye")
+                    # Reset the game
+                    self.running = False
+                    return self.score1, self.score2
 
     def winner_screen(self, human_score, pc_score):
         """
@@ -448,5 +461,3 @@ if __name__ == "__main__":
         os.system('cls')
         score1, score2 = game.game_screen(result, initial_player)  # Pass the initial player's turn to game_screen
         game.winner_screen(score1, score2)
-
-
