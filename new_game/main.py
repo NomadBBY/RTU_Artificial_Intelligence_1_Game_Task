@@ -14,17 +14,16 @@ class Algorithm:
         pass
 
     def minimax(self, number1, number2, score1, score2, turn, depth, maximizing_player):
-
         if depth == 0 or number1 >= 1000 or number2 >= 1000:
             # Evaluate the current state
-            # The computer (maximizing player) wants a lower score than the human
+            # The computer (maximizing player) wants a higher score than the human
             if number1 >= 1000:
-                return score1 - score2, None  # Human wins (computer loses, lower score)
+                return score2 - score1, None  # Human wins (computer loses, lower score)
             elif number2 >= 1000:
                 return score1 - score2, None  # Computer wins (higher score)
             else:
-                # Compare the scores and return a value based on who has the lower score
-                return score1 - score2, None
+                # Compare the scores and return a value based on who has the higher score
+                return score2 - score1, None
 
         if maximizing_player:
             max_eval = float('-inf')
@@ -51,7 +50,11 @@ class Algorithm:
 
     def get_possible_moves(self, number, turn):
         if turn == 'computer':
-            return [2, 3]  # The possible moves for the computer are always 2x and 3x
+            possible_moves = []
+            for i in range(2, 11):  # Consider multipliers from 2 to 10
+                if (number * i) % 2 == 1:  # Include only moves that result in odd numbers
+                    possible_moves.append(i)
+            return possible_moves
         else:
             # For the human player, the possible moves can vary based on the number
             possible_moves = []
@@ -64,9 +67,9 @@ class Algorithm:
 
     def update_score(self, score, number):
         if number % 2 == 0:
-            return score + 1  # Add 1 point for even number
+            return score - 1  # Subtract 1 point for even number
         else:
-            return score - 1  # Subtract 1 point for odd number
+            return score + 1  # Add 1 point for odd number
 
 class GameWindow:
 
