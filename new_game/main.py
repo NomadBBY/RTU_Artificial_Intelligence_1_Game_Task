@@ -13,24 +13,25 @@ class Algorithm:
     def __init__(self) -> None:
         pass
 
-    def minimax(self, number1, number2, turn, depth, maximizing_player):
-        if depth == 0 or (number1 >= 1000 or number2 >= 1000):
+    def minimax(self, number1, number2, score1, score2, turn, depth, maximizing_player):
+        if depth == 0 or number1 >= 1000 or number2 >= 1000:
             # Evaluate the current state
-            # The computer (maximizing player) wants a lower score than the human
+            # The computer (maximizing player) wants a higher score than the human
             if number1 >= 1000:
-                return 1, None  # Human wins (computer loses, higher score)
+                return score2 - score1, None  # Human wins (computer loses, lower score)
             elif number2 >= 1000:
-                return -1, None  # Computer wins (lower score)
+                return score1 - score2, None  # Computer wins (higher score)
             else:
-                # Compare the scores and return a value based on who has the lower score
-                return (number2 - number1) / max(number1, number2), None
+                # Compare the scores and return a value based on who has the higher score
+                return score2 - score1, None
 
         if maximizing_player:
             max_eval = float('-inf')
             best_move = None
             for move in self.get_possible_moves(number1, turn):
                 new_number1 = self.make_move(number1, move)
-                evaluation = self.minimax(new_number1, number2, 'computer', depth - 1, False)[0]
+                new_score1 = self.update_score(score1, new_number1)
+                evaluation = self.minimax(new_number1, number2, new_score1, score2, 'computer', depth - 1, False)[0]
                 if evaluation > max_eval:
                     max_eval = evaluation
                     best_move = move
@@ -40,17 +41,35 @@ class Algorithm:
             best_move = None
             for move in self.get_possible_moves(number2, turn):
                 new_number2 = self.make_move(number2, move)
-                evaluation = self.minimax(number1, new_number2, 'human', depth - 1, True)[0]
+                new_score2 = self.update_score(score2, new_number2)
+                evaluation = self.minimax(number1, new_number2, score1, new_score2, 'human', depth - 1, True)[0]
                 if evaluation < min_eval:
                     min_eval = evaluation
                     best_move = move
             return min_eval, best_move
 
     def get_possible_moves(self, number, turn):
-        return [2, 3]  # The possible moves are always 2x and 3x
+        if turn == 'computer':
+            possible_moves = []
+            for i in range(2, 11):  # Consider multipliers from 2 to 10
+                if (number * i) % 2 == 1:  # Include only moves that result in odd numbers
+                    possible_moves.append(i)
+            return possible_moves
+        else:
+            # For the human player, the possible moves can vary based on the number
+            possible_moves = []
+            for i in range(2, min(number, 6) + 1):  # Limit possible moves to 6
+                possible_moves.append(i)
+            return possible_moves
 
     def make_move(self, number, move):
         return number * move
+
+    def update_score(self, score, number):
+        if number % 2 == 0:
+            return score - 1  # Subtract 1 point for even number
+        else:
+            return score + 1  # Add 1 point for odd number
 
 class GameWindow:
 
@@ -319,15 +338,17 @@ class GameWindow:
                                 break
 
                 if self.turn == 'computer':
-
                     print("Computer is thinking...")
                     pygame.display.update()
                     pygame.time.delay(1000)  # Add a delay of 1000 milliseconds (1 second)
+
                     # Get the best move for the computer using MiniMax algorithm
-                    best_eval, best_move = algo.minimax(number1, number2, 'computer', 3, False)
+                    best_eval, best_move = algo.minimax(number1, number2, self.score1, self.score2, 'computer', 3, False)
+
                     if best_move is not None:
                         # Make the best move
                         number2 *= best_move
+
                         # Update the score based on the parity of the number
                         if number2 % 2 == 0:
                             print("Number is even!")
@@ -335,8 +356,10 @@ class GameWindow:
                         else:
                             print("Number is odd!")
                             self.score2 -= 1
+
                         # Update the numbers displayed in the windows
                         render_player_two()
+
                     # Switch to human's turn
                     self.turn = 'human'
 
