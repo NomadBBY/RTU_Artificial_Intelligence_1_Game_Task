@@ -1,5 +1,4 @@
 import pygame
-import random
 import os
 
 BACKGROUND_COLOR = 225, 217, 196
@@ -7,69 +6,93 @@ BUTTON_COLOR = 100, 100, 100
 
 class Algorithm:
     '''
-    Implementation of the MiniMax algorithm for the game
+    Implementation of the MiniMax algorithm for the number manipulation game.
+    Each turn, a player can multiply the current number by 2 or 3.
+    Points are scored based on the resulting number's parity.
+    The game ends when a number >= 1000 is reached.
     '''
 
-    def __init__(self) -> None:
-        pass
+    def __init__(self, start_number):
+        self.current_number = start_number
+        self.score = 0  # Assuming a single player score tracking for simplicity
 
-    def minimax(self, number1, number2, score1, score2, turn, depth, maximizing_player):
-        if depth == 0 or number1 >= 1000 or number2 >= 1000:
-            # Evaluate the current state
-            # The computer (maximizing player) wants a higher score than the human
-            if number1 >= 1000:
-                return score2 - score1, None  # Human wins (computer loses, lower score)
-            elif number2 >= 1000:
-                return score1 - score2, None  # Computer wins (higher score)
-            else:
-                # Compare the scores and return a value based on who has the higher score
-                return score2 - score1, None
+    def is_game_over(self):
+        # Check if the current game state is a terminal state.
+        return self.current_number >= 1000
+
+    def evaluate_heuristic(self):
+        # Heuristic evaluation of the current game state.
+        if self.current_number >= 1000:
+            return float('inf') if self.score < 0 else float('-inf')
+        return self.score
+
+    def minimax(self, depth, maximizing_player):
+        if depth == 0 or self.is_game_over():
+            return self.evaluate_heuristic()
+    
+        if maximizing_player:
+            max_eval = float('-inf')
+            original_number = self.current_number
+            original_score = self.score
+            for multiplier in [2, 3]:
+                self.current_number = multiplier
+                self.score += -1 if self.current_number % 2 == 0 else 1  # Decrement score for even numbers, increment for odd numbers
+                eval = self.minimax(depth - 1, False)
+                max_eval = max(max_eval, eval)
+                self.current_number = original_number
+                self.score = original_score
+            return max_eval
+        
+        else:
+            min_eval = float('inf')
+            original_number = self.current_number
+            original_score = self.score
+            for multiplier in [2, 3]:
+                self.current_number= multiplier
+                self.score += -1 if self.current_number % 2 == 0 else 1  # Decrement score for even numbers, increment for odd numbers
+                eval = self.minimax(depth - 1, True)
+                min_eval = min(min_eval, eval)
+                self.current_number = original_number
+                self.score = original_score
+            return min_eval
+
+    def alphabeta(self, depth, alpha, beta, maximizing_player):
+        # Similar implementation to minimax, with alpha-beta pruning added.
+        if depth == 0 or self.is_game_over():
+            return self.evaluate_heuristic()
 
         if maximizing_player:
             max_eval = float('-inf')
-            best_move = None
-            for move in self.get_possible_moves(number1, turn):
-                new_number1 = self.make_move(number1, move)
-                new_score1 = self.update_score(score1, new_number1)
-                evaluation = self.minimax(new_number1, number2, new_score1, score2, 'computer', depth - 1, False)[0]
-                if evaluation > max_eval:
-                    max_eval = evaluation
-                    best_move = move
-            return max_eval, best_move
+            for multiplier in [2, 3]:
+                original_number = self.current_number
+                self.current_number *= multiplier
+                self.score += 1 if self.current_number % 2 == 0 else -1
+                eval = self.alphabeta(depth - 1, alpha, beta, False)
+                self.current_number = original_number
+                self.score -= 1 if self.current_number % 2 == 0 else -1
+                max_eval = max(max_eval, eval)
+                alpha = max(alpha, eval)
+                if beta <= alpha:
+                    break
+            return max_eval
         else:
             min_eval = float('inf')
-            best_move = None
-            for move in self.get_possible_moves(number2, turn):
-                new_number2 = self.make_move(number2, move)
-                new_score2 = self.update_score(score2, new_number2)
-                evaluation = self.minimax(number1, new_number2, score1, new_score2, 'human', depth - 1, True)[0]
-                if evaluation < min_eval:
-                    min_eval = evaluation
-                    best_move = move
-            return min_eval, best_move
+            for multiplier in [2, 3]:
+                original_number = self.current_number
+                self.current_number *= multiplier
+                self.score += 1 if self.current_number % 2 == 0 else -1
+                eval = self.alphabeta(depth - 1, alpha, beta, True)
+                self.current_number = original_number
+                self.score -= 1 if self.current_number % 2 == 0 else -1
+                min_eval = min(min_eval, eval)
+                beta = min(beta, eval)
+                if beta <= alpha:
+                    break
+            return min_eval
 
-    def get_possible_moves(self, number, turn):
-        if turn == 'computer':
-            possible_moves = []
-            for i in range(2, 11):  # Consider multipliers from 2 to 10
-                if (number * i) % 2 == 1:  # Include only moves that result in odd numbers
-                    possible_moves.append(i)
-            return possible_moves
-        else:
-            # For the human player, the possible moves can vary based on the number
-            possible_moves = []
-            for i in range(2, min(number, 6) + 1):  # Limit possible moves to 6
-                possible_moves.append(i)
-            return possible_moves
+    # Removed get_possible_moves and make_move as they are not directly relevant for the described game logic.
 
-    def make_move(self, number, move):
-        return number * move
-
-    def update_score(self, score, number):
-        if number % 2 == 0:
-            return score - 1  # Subtract 1 point for even number
-        else:
-            return score + 1  # Add 1 point for odd number
+    # No need for update_score method since score updates are directly handled within minimax/alphabeta methods.
 
 class GameWindow:
 
@@ -300,9 +323,6 @@ class GameWindow:
         self.score1 = 0
         self.score2 = 0
 
-        # Create an instance of the MiniMax algorithm
-        algo = Algorithm()
-
         # Main loop to handle events
         while self.running:
             for event in pygame.event.get():
@@ -343,7 +363,24 @@ class GameWindow:
                     pygame.time.delay(1000)  # Add a delay of 1000 milliseconds (1 second)
 
                     # Get the best move for the computer using MiniMax algorithm
-                    best_eval, best_move = algo.minimax(number1, number2, self.score1, self.score2, 'computer', 3, False)
+                    best_move = None
+                    best_eval = float('-inf')
+
+                    # Iterate over possible multipliers (2 and 3)
+                    for multiplier in [2, 3]:
+                        # Make a hypothetical move for the computer
+                        new_number = number2 * multiplier
+
+                        # Update the score based on the parity of the number
+                        new_score = self.score2 + 1 if new_number % 2 == 0 else self.score2 - 1
+
+                        # Evaluate the move using the minimax algorithm with a higher depth
+                        eval_score = Algorithm(new_number).minimax(10, False)  # Increased depth to 10
+
+                        # Check if this move yields a better evaluation score
+                        if eval_score > best_eval:
+                            best_eval = eval_score
+                            best_move = multiplier
 
                     if best_move is not None:
                         # Make the best move
@@ -360,6 +397,13 @@ class GameWindow:
                         # Update the numbers displayed in the windows
                         render_player_two()
 
+                    # Check if either score is >= 1000
+                    if number1 >= 1000 or number2 >= 1000:
+                        print("Goodbye")
+                        # Reset the game
+                        self.running = False
+                        return self.score1, self.score2
+
                     # Switch to human's turn
                     self.turn = 'human'
 
@@ -369,6 +413,8 @@ class GameWindow:
                     # Reset the game
                     self.running = False
                     return self.score1, self.score2
+
+    pygame.quit()
 
     def winner_screen(self, human_score, pc_score):
         """
