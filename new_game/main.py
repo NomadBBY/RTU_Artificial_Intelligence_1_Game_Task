@@ -198,6 +198,7 @@ class GameWindow:
 
         text_font = pygame.font.Font(None, 45)  # Font for the text
         number_font = pygame.font.Font(None, 30)  # Font for the number
+        score_font = pygame.font.Font(None, 24)  # Font for the score
 
         # Define button parameters
         button_width = 60
@@ -374,6 +375,64 @@ class GameWindow:
                     # Reset the game
                     self.running = False
                     return self.score1, self.score2
+
+            # Clear the screen
+            self.window.fill(BACKGROUND_COLOR)
+
+            # Render text "Spēlētājs"
+            text1 = text_font.render("Spēlētājs", True, (0, 0, 0))
+            text1_rect = text1.get_rect(topleft=(text1_x, text1_y))
+            self.window.blit(text1, text1_rect)
+
+            # Render text "Dators"
+            text2 = text_font.render("Dators", True, (0, 0, 0))
+            text2_rect = text2.get_rect(topleft=(text2_x, text2_y))
+            self.window.blit(text2, text2_rect)
+
+            # Render buttons
+            button_rect = pygame.Rect(button1_x, button1_y, button_width, button_height)
+            pygame.draw.rect(self.window, button_color, button_rect)
+            button_text = button_font.render("x2", True, (0, 0, 0))
+            button_text_rect = button_text.get_rect(center=button_rect.center)
+            self.window.blit(button_text, button_text_rect)
+
+            button_rect = pygame.Rect(button2_x, button2_y, button_width, button_height)
+            pygame.draw.rect(self.window, button_color, button_rect)
+            button_text = button_font.render("x3", True, (0, 0, 0))
+            button_text_rect = button_text.get_rect(center=button_rect.center)
+            self.window.blit(button_text, button_text_rect)
+
+            button_rect = pygame.Rect(button3_x, button3_y, button_width, button_height)
+            pygame.draw.rect(self.window, button_color, button_rect)
+            button_text = button_font.render("x2", True, (0, 0, 0))
+            button_text_rect = button_text.get_rect(center=button_rect.center)
+            self.window.blit(button_text, button_text_rect)
+
+            button_rect = pygame.Rect(button4_x, button4_y, button_width, button_height)
+            pygame.draw.rect(self.window, button_color, button_rect)
+            button_text = button_font.render("x3", True, (0, 0, 0))
+            button_text_rect = button_text.get_rect(center=button_rect.center)
+            self.window.blit(button_text, button_text_rect)
+
+            # Render the windows
+            window1_rect = pygame.Rect(80, 200, 165, 50)
+            pygame.draw.rect(self.window, (200, 200, 200), window1_rect)
+            number1_text = number_font.render(str(number1), True, (0, 0, 0))
+            number1_text_rect = number1_text.get_rect(center=window1_rect.center)
+            self.window.blit(number1_text, number1_text_rect)
+
+            window2_rect = pygame.Rect(360, 200, 165, 50)
+            pygame.draw.rect(self.window, (200, 200, 200), window2_rect)
+            number2_text = number_font.render(str(number2), True, (0, 0, 0))
+            number2_text_rect = number2_text.get_rect(center=window2_rect.center)
+            self.window.blit(number2_text, number2_text_rect)
+
+            # Render scores
+            score_text = score_font.render(f"Player Score: {self.score1}   Computer Score: {self.score2}", True, (0, 0, 0))
+            score_text_rect = score_text.get_rect(center=(self.window.get_width() // 2, 300))
+            self.window.blit(score_text, score_text_rect)
+
+            pygame.display.update()
 
     def winner_screen(self, human_score, pc_score):
         """
