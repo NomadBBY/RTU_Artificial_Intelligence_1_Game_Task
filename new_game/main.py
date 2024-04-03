@@ -6,89 +6,92 @@ BACKGROUND_COLOR = 225, 217, 196
 BUTTON_COLOR = 100, 100, 100
 
 class Algorithm:
-    '''
-    Implementation of the MiniMax algorithm with Alpha-Beta pruning for the game
-    '''
-
-    def __init__(self) -> None:
+    
+    def __init__(self):
         pass
-
-    def minimax(self, number1, number2, score1, score2, turn, depth, maximizing_player):
-        if depth == 0 or number1 >= 1000 or number2 >= 1000:
-            # Evaluate the current state
-            # The computer (maximizing player) wants a higher score than the human
-            if number1 >= 1000:
-                return score2 - score1, None  # Human wins (computer loses, lower score)
-            elif number2 >= 1000:
-                return score1 - score2, None  # Computer wins (higher score)
-            else:
-                # Compare the scores and return a value based on who has the higher score
-                return score2 - score1, None
-
-        if maximizing_player:
-            return self.max_value(number1, number2, score1, score2, turn, depth, float('-inf'), float('inf'))
-        else:
-            return self.min_value(number1, number2, score1, score2, turn, depth, float('-inf'), float('inf'))
-
-    def max_value(self, number1, number2, score1, score2, turn, depth, alpha, beta):
-        if depth == 0 or number1 >= 1000 or number2 >= 1000:
-            return score2 - score1, None
-
-        max_eval = float('-inf')
-        best_move = None
-        for move in self.get_possible_moves(number1, turn):
-            new_number1 = self.make_move(number1, move)
-            new_score1 = self.update_score(score1, new_number1)
-            evaluation = self.min_value(new_number1, number2, new_score1, score2, 'computer', depth - 1, alpha, beta)[0]
-            if evaluation > max_eval:
-                max_eval = evaluation
-                best_move = move
-            alpha = max(alpha, max_eval)
-            if beta <= alpha:
-                break
-        return max_eval, best_move
-
-    def min_value(self, number1, number2, score1, score2, turn, depth, alpha, beta):
-        if depth == 0 or number1 >= 1000 or number2 >= 1000:
-            return score2 - score1, None
-
-        min_eval = float('inf')
-        best_move = None
-        for move in self.get_possible_moves(number2, turn):
-            new_number2 = self.make_move(number2, move)
-            new_score2 = self.update_score(score2, new_number2)
-            evaluation = self.max_value(number1, new_number2, score1, new_score2, 'human', depth - 1, alpha, beta)[0]
-            if evaluation < min_eval:
-                min_eval = evaluation
-                best_move = move
-            beta = min(beta, min_eval)
-            if beta <= alpha:
-                break
-        return min_eval, best_move
-
-    def get_possible_moves(self, number, turn):
-        if turn == 'computer':
-            # For the computer player, if 3x outcome is divisible by 2, choose only 2x, otherwise choose 3x
-            if (number * 3) % 2 == 0:
-                return [2]
-            else:
-                return [3]
-        else:
-            # For the human player, limit possible moves to the range of 2 to min(number, 6)
-            return list(range(2, min(number, 6) + 1))
 
     def make_move(self, number, move):
         return number * move
 
     def update_score(self, score, number):
         if number % 2 == 0:
-            return score - 1  # Subtract 1 point for even number
+            return score + 1  # Add 1 point for even number
         else:
-            return score + 1  # Add 1 point for odd number
+            return score - 1  # Subtract 1 point for odd number
 
+    def get_possible_moves(self, number, turn):
+        # This method could be overridden if needed
+        if turn == 'computer':
+            return [2, 3]
+        else:
+            return list(range(2, min(number, 6) + 1))
+
+class MinimaxAlgorithm(Algorithm):
+    def minimax(self, number1, number2, score1, score2, turn, depth, maximizing_player):
+        if depth == 0 or number1 >= 1000 or number2 >= 1000:
+            return score2 - score1, None
+        
+        if maximizing_player:
+            max_eval = float('-inf')
+            best_move = None
+            for move in self.get_possible_moves(number1, turn):
+                new_number1 = self.make_move(number1, move)
+                new_score1 = self.update_score(score1, new_number1)
+                evaluation = self.minimax(new_number1, number2, new_score1, score2, 'computer', depth - 1, False)[0]
+                if evaluation > max_eval:
+                    max_eval = evaluation
+                    best_move = move
+            return max_eval, best_move
+        else:
+            min_eval = float('inf')
+            best_move = None
+            for move in self.get_possible_moves(number2, turn):
+                new_number2 = self.make_move(number2, move)
+                new_score2 = self.update_score(score2, new_number2)
+                evaluation = self.minimax(number1, new_number2, score1, new_score2, 'human', depth - 1, True)[0]
+                if evaluation < min_eval:
+                    min_eval = evaluation
+                    best_move = move
+            return min_eval, best_move
+
+class AlphaBetaAlgorithm(Algorithm):
+    def minimax(self, number1, number2, score1, score2, turn, depth, alpha, beta, maximizing_player):
+        if depth == 0 or number1 >= 1000 or number2 >= 1000:
+            return score2 - score1, None
+        
+        if maximizing_player:
+            max_eval = float('-inf')
+            best_move = None
+            for move in self.get_possible_moves(number1, turn):
+                new_number1 = self.make_move(number1, move)
+                new_score1 = self.update_score(score1, new_number1)
+                evaluation = self.minimax(new_number1, number2, new_score1, score2, 'computer', depth - 1, alpha, beta, False)[0]
+                if evaluation > max_eval:
+                    max_eval = evaluation
+                    best_move = move
+                alpha = max(alpha, evaluation)
+                if beta <= alpha:
+                    break
+            return max_eval, best_move
+        else:
+            min_eval = float('inf')
+            best_move = None
+            for move in self.get_possible_moves(number2, turn):
+                new_number2 = self.make_move(number2, move)
+                new_score2 = self.update_score(score2, new_number2)
+                evaluation = self.minimax(number1, new_number2, score1, new_score2, 'human', depth - 1, alpha, beta, True)[0]
+                if evaluation < min_eval:
+                    min_eval = evaluation
+                    best_move = move
+                beta = min(beta, evaluation)
+                if beta <= alpha:
+                    break
+            return min_eval, best_move
+        
 class GameWindow:
 
     def __init__(self, width=600, height=350):
+        pygame.init()  # Initialize Pygame
         pygame.font.init()  # Initialize the font module
         self.width = width
         self.height = height
@@ -203,8 +206,51 @@ class GameWindow:
                                return button_values[i]
 
         pygame.quit()
+    
+    def algorithm_choice_screen(self):
+        self.window.fill(BACKGROUND_COLOR)  # Заполняем фон
+        title_font = pygame.font.Font(None, 50)  # Шрифт для заголовка
+        button_font = pygame.font.Font(None, 36)  # Шрифт для текста кнопок
 
-    def game_screen(self, number, initial_player):
+        # Создаем и отрисовываем заголовок
+        title_surface = title_font.render('Choose Algorithm', True, (0, 0, 0))
+        title_rect = title_surface.get_rect(center=(self.width // 2, 50))
+        self.window.blit(title_surface, title_rect)
+
+        # Создаем кнопки для выбора алгоритма
+        minimax_button = pygame.Rect(self.width // 4 - 75, 200, 150, 50)
+        alpha_beta_button = pygame.Rect(self.width * 3 // 4 - 75, 200, 150, 50)
+
+        # Отрисовываем кнопки
+        pygame.draw.rect(self.window, BUTTON_COLOR, minimax_button)
+        pygame.draw.rect(self.window, BUTTON_COLOR, alpha_beta_button)
+
+        # Наносим текст на кнопки
+        minimax_text = button_font.render('Minimax', True, (255, 255, 255))
+        alpha_beta_text = button_font.render('Alpha-Beta', True, (255, 255, 255))
+        self.window.blit(minimax_text, (minimax_button.x + 20, minimax_button.y + 10))
+        self.window.blit(alpha_beta_text, (alpha_beta_button.x + 10, alpha_beta_button.y + 10))
+
+        pygame.display.flip()  # Обновляем экран
+
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if minimax_button.collidepoint(event.pos):
+                        return "minimax"
+                    elif alpha_beta_button.collidepoint(event.pos):
+                        return "alpha-beta"
+
+    def game_screen(self, number, initial_player, algo):
+
+        self.turn = initial_player
+        self.score1 = 0
+        self.score2 = 0
+        number1 = number
+        number2 = number
 
         text_font = pygame.font.Font(None, 45)  # Font for the text
         number_font = pygame.font.Font(None, 30)  # Font for the number
@@ -317,17 +363,15 @@ class GameWindow:
         self.score2 = 0
 
         # Create an instance of the MiniMax algorithm
-        algo = Algorithm()
+        #algo = Algorithm()
 
         # Main loop to handle events
-        while self.running:
+        running = True
+        while running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    self.running = False
-                    break  # Exit the loop if running is set to False
-
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if self.turn == 'human':
+                    running = False
+                elif event.type == pygame.MOUSEBUTTONDOWN and self.turn == 'human':
                         # Human's turn
                         # Check if the first two buttons are clicked
                         for i, rect in enumerate(button_rects[:2]):
@@ -359,22 +403,14 @@ class GameWindow:
                     pygame.time.delay(1000)  # Add a delay of 1000 milliseconds (1 second)
 
                     # Get the best move for the computer using MiniMax algorithm
-                    best_eval, best_move = algo.minimax(number1, number2, self.score1, self.score2, 'computer', 3, False)
+                    if isinstance(algo, MinimaxAlgorithm):
+                                best_eval, best_move = algo.minimax(number1, number2, self.score1, self.score2, 'computer', 3, False)
+                    elif isinstance(algo, AlphaBetaAlgorithm):
+                                best_eval, best_move = algo.minimax(number1, number2, self.score1, self.score2, 'computer', 3, float('-inf'), float('inf'), False)
 
-                    if best_move is not None:
-                        # Make the best move
-                        number2 *= best_move
-
-                        # Update the score based on the parity of the number
-                        if number2 % 2 == 0:
-                            print("Number is even!")
-                            self.score2 += 1
-                        else:
-                            print("Number is odd!")
-                            self.score2 -= 1
-
-                        # Update the numbers displayed in the windows
-                        render_player_two()
+                    if best_move:
+                                    number2 = algo.make_move(number2, best_move)
+                                    self.score2 = algo.update_score(self.score2, number2)
 
                     # Switch to human's turn
                     self.turn = 'human'
@@ -545,16 +581,22 @@ class GameWindow:
         pygame.quit()
 
 
-# Inside the __name__ == "__main__" block
+# Inside the name == "main" block
         
 if __name__ == "__main__":
     game = GameWindow()
-
+    
     while game.running:
+        
         game = GameWindow()
-        initial_player = game.welcome_screen()  # Get the initial player's turn
-        result = game.choice_screen()
-        print("You chose: ", result)
-        os.system('cls')
-        score1, score2 = game.game_screen(result, initial_player)  # Pass the initial player's turn to game_screen
+        initial_player = game.welcome_screen()
+        start_number = game.choice_screen()
+        algorithm_choice = game.algorithm_choice_screen()
+
+        if algorithm_choice == "minimax":
+            algo = MinimaxAlgorithm()
+        else:
+            algo = AlphaBetaAlgorithm()
+
+        score1, score2 = game.game_screen(start_number, initial_player, algo)
         game.winner_screen(score1, score2)
