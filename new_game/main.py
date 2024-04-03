@@ -50,22 +50,14 @@ class Algorithm:
 
     def get_possible_moves(self, number, turn):
         if turn == 'computer':
-            possible_moves = []
-            for i in range(2, 11):  # Consider multipliers from 2 to 10
-                if (number * i) % 2 == 1:  # Include only moves that result in odd numbers
-                    possible_moves.append(i)
-            if not possible_moves:  # If no optimal moves found, choose the smallest possible move
+            # For the computer player, if 3x outcome is divisible by 2, choose only 2x, otherwise choose 3x
+            if (number * 3) % 2 == 0:
                 return [2]
-            return possible_moves
+            else:
+                return [3]
         else:
-            # For the human player, the possible moves can vary based on the number
-            possible_moves = []
-            for i in range(2, min(number, 6) + 1):  # Limit possible moves to 6
-                possible_moves.append(i)
-            if not possible_moves:  # If no optimal moves found, choose the smallest possible move
-                return [2]
-            return possible_moves
-
+            # For the human player, limit possible moves to the range of 2 to min(number, 6)
+            return list(range(2, min(number, 6) + 1))
 
     def make_move(self, number, move):
         return number * move
