@@ -1,4 +1,5 @@
 import pygame
+import random
 import os
 
 BACKGROUND_COLOR = 225, 217, 196
@@ -6,93 +7,66 @@ BUTTON_COLOR = 100, 100, 100
 
 class Algorithm:
     '''
-    Implementation of the MiniMax algorithm for the number manipulation game.
-    Each turn, a player can multiply the current number by 2 or 3.
-    Points are scored based on the resulting number's parity.
-    The game ends when a number >= 1000 is reached.
+    Implementation of the MiniMax algorithm for the game
     '''
 
-    def __init__(self, start_number):
-        self.current_number = start_number
-        self.score = 0  # Assuming a single player score tracking for simplicity
+    def __init__(self) -> None:
+        pass
 
-    def is_game_over(self):
-        # Check if the current game state is a terminal state.
-        return self.current_number >= 1000
-
-    def evaluate_heuristic(self):
-        # Heuristic evaluation of the current game state.
-        if self.current_number >= 1000:
-            return float('inf') if self.score < 0 else float('-inf')
-        return self.score
-
-    def minimax(self, depth, maximizing_player):
-        if depth == 0 or self.is_game_over():
-            return self.evaluate_heuristic()
-    
-        if maximizing_player:
-            max_eval = float('-inf')
-            original_number = self.current_number
-            original_score = self.score
-            for multiplier in [2, 3]:
-                self.current_number = multiplier
-                self.score += -1 if self.current_number % 2 == 0 else 1  # Decrement score for even numbers, increment for odd numbers
-                eval = self.minimax(depth - 1, False)
-                max_eval = max(max_eval, eval)
-                self.current_number = original_number
-                self.score = original_score
-            return max_eval
-        
-        else:
-            min_eval = float('inf')
-            original_number = self.current_number
-            original_score = self.score
-            for multiplier in [2, 3]:
-                self.current_number= multiplier
-                self.score += -1 if self.current_number % 2 == 0 else 1  # Decrement score for even numbers, increment for odd numbers
-                eval = self.minimax(depth - 1, True)
-                min_eval = min(min_eval, eval)
-                self.current_number = original_number
-                self.score = original_score
-            return min_eval
-
-    def alphabeta(self, depth, alpha, beta, maximizing_player):
-        # Similar implementation to minimax, with alpha-beta pruning added.
-        if depth == 0 or self.is_game_over():
-            return self.evaluate_heuristic()
+    def minimax(self, number1, number2, score1, score2, turn, depth, maximizing_player):
+        if depth == 0 or number1 >= 1000 or number2 >= 1000:
+            # Evaluate the current state
+            # The computer (maximizing player) wants a higher score than the human
+            if number1 >= 1000:
+                return score2 - score1, None  # Human wins (computer loses, lower score)
+            elif number2 >= 1000:
+                return score1 - score2, None  # Computer wins (higher score)
+            else:
+                # Compare the scores and return a value based on who has the higher score
+                return score2 - score1, None
 
         if maximizing_player:
             max_eval = float('-inf')
-            for multiplier in [2, 3]:
-                original_number = self.current_number
-                self.current_number *= multiplier
-                self.score += 1 if self.current_number % 2 == 0 else -1
-                eval = self.alphabeta(depth - 1, alpha, beta, False)
-                self.current_number = original_number
-                self.score -= 1 if self.current_number % 2 == 0 else -1
-                max_eval = max(max_eval, eval)
-                alpha = max(alpha, eval)
-                if beta <= alpha:
-                    break
-            return max_eval
+            best_move = None
+            for move in self.get_possible_moves(number1, turn):
+                new_number1 = self.make_move(number1, move)
+                new_score1 = self.update_score(score1, new_number1)
+                evaluation = self.minimax(new_number1, number2, new_score1, score2, 'computer', depth - 1, False)[0]
+                if evaluation > max_eval:
+                    max_eval = evaluation
+                    best_move = move
+            return max_eval, best_move
         else:
             min_eval = float('inf')
-            for multiplier in [2, 3]:
-                original_number = self.current_number
-                self.current_number *= multiplier
-                self.score += 1 if self.current_number % 2 == 0 else -1
-                eval = self.alphabeta(depth - 1, alpha, beta, True)
-                self.current_number = original_number
-                self.score -= 1 if self.current_number % 2 == 0 else -1
-                min_eval = min(min_eval, eval)
-                beta = min(beta, eval)
-                if beta <= alpha:
-                    break
-            return min_eval
+            best_move = None
+            for move in self.get_possible_moves(number2, turn):
+                new_number2 = self.make_move(number2, move)
+                new_score2 = self.update_score(score2, new_number2)
+                evaluation = self.minimax(number1, new_number2, score1, new_score2, 'human', depth - 1, True)[0]
+                if evaluation < min_eval:
+                    min_eval = evaluation
+                    best_move = move
+            return min_eval, best_move
 
-    # Removed get_possible_moves and make_move as they are not directly relevant for the described game logic.
+    def get_possible_moves(self, number, turn):
+        if turn == 'computer':
+            # For the computer player, if 3x outcome is divisible by 2, choose only 2x, otherwise choose 3x
+            if (number * 3) % 2 == 0:
+                return [2]
+            else:
+                return [3]
+        else:
+            # For the human player, limit possible moves to the range of 2 to min(number, 6)
+            return list(range(2, min(number, 6) + 1))
 
-    # No need for update_score method since score updates are directly handled within minimax/alphabeta methods.
+    def make_move(self, number, move):
+        return number * move
+
+    def update_score(self, score, number):
+        if number % 2 == 0:
+            return score - 1  # Subtract 1 point for even number
+        else:
+            return score + 1  # Add 1 point for odd number
 
 class GameWindow:
 
@@ -216,6 +190,7 @@ class GameWindow:
 
         text_font = pygame.font.Font(None, 45)  # Font for the text
         number_font = pygame.font.Font(None, 30)  # Font for the number
+        score_font = pygame.font.Font(None, 24)  # Font for the score
 
         # Define button parameters
         button_width = 60
@@ -323,6 +298,9 @@ class GameWindow:
         self.score1 = 0
         self.score2 = 0
 
+        # Create an instance of the MiniMax algorithm
+        algo = Algorithm()
+
         # Main loop to handle events
         while self.running:
             for event in pygame.event.get():
@@ -363,24 +341,7 @@ class GameWindow:
                     pygame.time.delay(1000)  # Add a delay of 1000 milliseconds (1 second)
 
                     # Get the best move for the computer using MiniMax algorithm
-                    best_move = None
-                    best_eval = float('-inf')
-
-                    # Iterate over possible multipliers (2 and 3)
-                    for multiplier in [2, 3]:
-                        # Make a hypothetical move for the computer
-                        new_number = number2 * multiplier
-
-                        # Update the score based on the parity of the number
-                        new_score = self.score2 + 1 if new_number % 2 == 0 else self.score2 - 1
-
-                        # Evaluate the move using the minimax algorithm with a higher depth
-                        eval_score = Algorithm(new_number).minimax(10, False)  # Increased depth to 10
-
-                        # Check if this move yields a better evaluation score
-                        if eval_score > best_eval:
-                            best_eval = eval_score
-                            best_move = multiplier
+                    best_eval, best_move = algo.minimax(number1, number2, self.score1, self.score2, 'computer', 3, False)
 
                     if best_move is not None:
                         # Make the best move
@@ -397,13 +358,6 @@ class GameWindow:
                         # Update the numbers displayed in the windows
                         render_player_two()
 
-                    # Check if either score is >= 1000
-                    if number1 >= 1000 or number2 >= 1000:
-                        print("Goodbye")
-                        # Reset the game
-                        self.running = False
-                        return self.score1, self.score2
-
                     # Switch to human's turn
                     self.turn = 'human'
 
@@ -414,7 +368,63 @@ class GameWindow:
                     self.running = False
                     return self.score1, self.score2
 
-    pygame.quit()
+            # Clear the screen
+            self.window.fill(BACKGROUND_COLOR)
+
+            # Render text "Spēlētājs"
+            text1 = text_font.render("Spēlētājs", True, (0, 0, 0))
+            text1_rect = text1.get_rect(topleft=(text1_x, text1_y))
+            self.window.blit(text1, text1_rect)
+
+            # Render text "Dators"
+            text2 = text_font.render("Dators", True, (0, 0, 0))
+            text2_rect = text2.get_rect(topleft=(text2_x, text2_y))
+            self.window.blit(text2, text2_rect)
+
+            # Render buttons
+            button_rect = pygame.Rect(button1_x, button1_y, button_width, button_height)
+            pygame.draw.rect(self.window, button_color, button_rect)
+            button_text = button_font.render("x2", True, (0, 0, 0))
+            button_text_rect = button_text.get_rect(center=button_rect.center)
+            self.window.blit(button_text, button_text_rect)
+
+            button_rect = pygame.Rect(button2_x, button2_y, button_width, button_height)
+            pygame.draw.rect(self.window, button_color, button_rect)
+            button_text = button_font.render("x3", True, (0, 0, 0))
+            button_text_rect = button_text.get_rect(center=button_rect.center)
+            self.window.blit(button_text, button_text_rect)
+
+            button_rect = pygame.Rect(button3_x, button3_y, button_width, button_height)
+            pygame.draw.rect(self.window, button_color, button_rect)
+            button_text = button_font.render("x2", True, (0, 0, 0))
+            button_text_rect = button_text.get_rect(center=button_rect.center)
+            self.window.blit(button_text, button_text_rect)
+
+            button_rect = pygame.Rect(button4_x, button4_y, button_width, button_height)
+            pygame.draw.rect(self.window, button_color, button_rect)
+            button_text = button_font.render("x3", True, (0, 0, 0))
+            button_text_rect = button_text.get_rect(center=button_rect.center)
+            self.window.blit(button_text, button_text_rect)
+
+            # Render the windows
+            window1_rect = pygame.Rect(80, 200, 165, 50)
+            pygame.draw.rect(self.window, (200, 200, 200), window1_rect)
+            number1_text = number_font.render(str(number1), True, (0, 0, 0))
+            number1_text_rect = number1_text.get_rect(center=window1_rect.center)
+            self.window.blit(number1_text, number1_text_rect)
+
+            window2_rect = pygame.Rect(360, 200, 165, 50)
+            pygame.draw.rect(self.window, (200, 200, 200), window2_rect)
+            number2_text = number_font.render(str(number2), True, (0, 0, 0))
+            number2_text_rect = number2_text.get_rect(center=window2_rect.center)
+            self.window.blit(number2_text, number2_text_rect)
+
+            # Render scores
+            score_text = score_font.render(f"Player Score: {self.score1}   Computer Score: {self.score2}", True, (0, 0, 0))
+            score_text_rect = score_text.get_rect(center=(self.window.get_width() // 2, 300))
+            self.window.blit(score_text, score_text_rect)
+
+            pygame.display.update()
 
     def winner_screen(self, human_score, pc_score):
         """
