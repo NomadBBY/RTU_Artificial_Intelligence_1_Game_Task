@@ -54,13 +54,18 @@ class Algorithm:
             for i in range(2, 11):  # Consider multipliers from 2 to 10
                 if (number * i) % 2 == 1:  # Include only moves that result in odd numbers
                     possible_moves.append(i)
+            if not possible_moves:  # If no optimal moves found, choose the smallest possible move
+                return [2]
             return possible_moves
         else:
             # For the human player, the possible moves can vary based on the number
             possible_moves = []
             for i in range(2, min(number, 6) + 1):  # Limit possible moves to 6
                 possible_moves.append(i)
+            if not possible_moves:  # If no optimal moves found, choose the smallest possible move
+                return [2]
             return possible_moves
+
 
     def make_move(self, number, move):
         return number * move
