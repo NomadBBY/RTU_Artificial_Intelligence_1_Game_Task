@@ -1,6 +1,4 @@
 import pygame
-import random
-import os
 
 BACKGROUND_COLOR = 225, 217, 196
 BUTTON_COLOR = 100, 100, 100
@@ -27,6 +25,7 @@ class Algorithm:
             return list(range(2, min(number, 6) + 1))
 
 class MinimaxAlgorithm(Algorithm):
+
     def minimax(self, number1, number2, score1, score2, turn, depth, maximizing_player):
         if depth == 0 or number1 >= 1000 or number2 >= 1000:
             return score2 - score1, None
@@ -55,6 +54,7 @@ class MinimaxAlgorithm(Algorithm):
             return min_eval, best_move
 
 class AlphaBetaAlgorithm(Algorithm):
+    
     def minimax(self, number1, number2, score1, score2, turn, depth, alpha, beta, maximizing_player):
         if depth == 0 or number1 >= 1000 or number2 >= 1000:
             return score2 - score1, None
@@ -219,8 +219,8 @@ class GameWindow:
         self.window.blit(title_surface, title_rect)
 
         # Create buttons for choosing the algorithm
-        minimax_button = pygame.Rect(self.width // 4 - 75, 200, 150, 50)
-        alpha_beta_button = pygame.Rect(self.width * 3 // 4 - 75, 200, 150, 50)
+        minimax_button = pygame.Rect((self.width - 150) // 4, 150, 150, 50)
+        alpha_beta_button = pygame.Rect((self.width - 150) * 3 // 4, 150, 150, 50)
 
         # Draw buttons
         pygame.draw.rect(self.window, BUTTON_COLOR, minimax_button)
