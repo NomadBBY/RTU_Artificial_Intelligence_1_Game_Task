@@ -208,30 +208,31 @@ class GameWindow:
         pygame.quit()
     
     def algorithm_choice_screen(self):
-        self.window.fill(BACKGROUND_COLOR)  # Заполняем фон
-        title_font = pygame.font.Font(None, 50)  # Шрифт для заголовка
-        button_font = pygame.font.Font(None, 36)  # Шрифт для текста кнопок
+    
+        self.window.fill(BACKGROUND_COLOR)  # Fill the background
+        title_font = pygame.font.Font(None, 50)  # Font for the title
+        button_font = pygame.font.Font(None, 36)  # Font for the button text
 
-        # Создаем и отрисовываем заголовок
-        title_surface = title_font.render('Choose Algorithm', True, (0, 0, 0))
+        # Create and render the title
+        title_surface = title_font.render('Choose Algorithm', True, (0, 0, 0))  # Black color
         title_rect = title_surface.get_rect(center=(self.width // 2, 50))
         self.window.blit(title_surface, title_rect)
 
-        # Создаем кнопки для выбора алгоритма
+        # Create buttons for choosing the algorithm
         minimax_button = pygame.Rect(self.width // 4 - 75, 200, 150, 50)
         alpha_beta_button = pygame.Rect(self.width * 3 // 4 - 75, 200, 150, 50)
 
-        # Отрисовываем кнопки
+        # Draw buttons
         pygame.draw.rect(self.window, BUTTON_COLOR, minimax_button)
         pygame.draw.rect(self.window, BUTTON_COLOR, alpha_beta_button)
 
-        # Наносим текст на кнопки
-        minimax_text = button_font.render('Minimax', True, (255, 255, 255))
-        alpha_beta_text = button_font.render('Alpha-Beta', True, (255, 255, 255))
+        # Render text on buttons
+        minimax_text = button_font.render('Minimax', True, (0, 0, 0))  # Black color
+        alpha_beta_text = button_font.render('Alpha-Beta', True, (0, 0, 0))  # Black color
         self.window.blit(minimax_text, (minimax_button.x + 20, minimax_button.y + 10))
         self.window.blit(alpha_beta_text, (alpha_beta_button.x + 10, alpha_beta_button.y + 10))
 
-        pygame.display.flip()  # Обновляем экран
+        pygame.display.flip()  # Update the screen
 
         while True:
             for event in pygame.event.get():
