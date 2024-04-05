@@ -343,19 +343,22 @@ class GameWindow:
         pygame.display.update()    
 
         def render_both_players():
+
             # Update the numbers displayed in the windows
             number1_text = number_font.render(str(both_numbers), True, (0, 0, 0))
             self.window.fill((200, 200, 200), rect=window1_rect)  # Clear previous number for window 1
             self.window.blit(number1_text, number1_text_rect)
+
+            number2_text = number_font.render(str(both_numbers), True, (0, 0, 0))
+            self.window.fill((200, 200, 200), rect=window2_rect)  # Clear previous number for window 2
+            self.window.blit(number2_text, number2_text_rect)
+
             pygame.display.update()
     
         # Initialize scores
         self.turn = initial_player
         self.score1 = 0
         self.score2 = 0
-    
-        # Create an instance of the MiniMax algorithm
-        # algo = Algorithm()
     
         # Main loop to handle events
         running = True
