@@ -465,11 +465,11 @@ class GameWindow:
             number1_text_rect = number1_text.get_rect(center=window1_rect.center)
             self.window.blit(number1_text, number1_text_rect)
     
-            window2_rect = pygame.Rect(360, 200, 165, 50)
-            pygame.draw.rect(self.window, (200, 200, 200), window2_rect)
-            number2_text = number_font.render(str(both_numbers), True, (0, 0, 0))
-            number2_text_rect = number2_text.get_rect(center=window2_rect.center)
-            self.window.blit(number2_text, number2_text_rect)
+            # window2_rect = pygame.Rect(360, 200, 165, 50)
+            # pygame.draw.rect(self.window, (200, 200, 200), window2_rect)
+            # number2_text = number_font.render(str(both_numbers), True, (0, 0, 0))
+            # number2_text_rect = number2_text.get_rect(center=window2_rect.center)
+            # self.window.blit(number2_text, number2_text_rect)
     
             # Render scores
             score_text = score_font.render(f"Player Score: {self.score1}   Computer Score: {self.score2}", True, (0, 0, 0))
