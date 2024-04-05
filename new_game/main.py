@@ -459,7 +459,7 @@ class GameWindow:
             self.window.blit(button_text, button_text_rect)
     
             # Render the windows    
-            window1_rect = pygame.Rect(80, 200, 165, 50)
+            window1_rect = pygame.Rect(200, 200, 250, 50)
             pygame.draw.rect(self.window, (200, 200, 200), window1_rect)
             number1_text = number_font.render(str(both_numbers), True, (0, 0, 0))
             number1_text_rect = number1_text.get_rect(center=window1_rect.center)
