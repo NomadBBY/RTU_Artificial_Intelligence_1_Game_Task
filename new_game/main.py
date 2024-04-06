@@ -24,17 +24,16 @@ class Algorithm:
         else:
             return list(range(2, min(number, 6) + 1))
 
-# Heuristic evaluation function
-def evaluate_state(number1, score1):
-    point_difference = abs(number1 - score1)
+def evaluate_state(score1, score2):
+    point_difference = abs(score2 - score1)
     if point_difference == 0:
         f1 = 1
     elif point_difference == 1:
         f1 = 0
     else:
-        f1 = 2 if number1 < score1 else -2
+        f1 = -3 if score1 < score2 else 3  # Adjusted for computer's goal
 
-    odd_numbers1 = sum(1 for i in range(2, number1 + 1) if number1 % i == 0)
+    odd_numbers1 = sum(1 for i in range(2, score1 + 1) if score1 % i == 0)
     f2 = 0
     if odd_numbers1 % 2 == 0:
         f2 += 1
@@ -48,7 +47,8 @@ def evaluate_state(number1, score1):
 class MinimaxAlgorithm(Algorithm):
     def minimax(self, number1, score1, score2, turn, depth, maximizing_player):
         if depth == 0 or number1 >= 1000:
-            return evaluate_state(number1, score1), None  # Using evaluate_state here instead of score difference
+            return evaluate_state(score1, score2), None 
+            
         if maximizing_player:
             max_eval = float('-inf')
             best_move = None
@@ -76,7 +76,7 @@ class AlphaBetaAlgorithm(Algorithm):
     
     def minimax(self, number1, number2, score1, score2, turn, depth, alpha, beta, maximizing_player):
         if depth == 0 or number1 >= 1000 or number2 >= 1000:
-            return score2 - score1, None
+            return evaluate_state(score1, score2), None  
         
         if maximizing_player:
             max_eval = float('-inf')
