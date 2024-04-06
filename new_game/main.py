@@ -1,6 +1,4 @@
 import pygame
-import random
-import os
 
 BACKGROUND_COLOR = 225, 217, 196
 BUTTON_COLOR = 100, 100, 100
@@ -27,6 +25,7 @@ class Algorithm:
             return list(range(2, min(number, 6) + 1))
 
 class MinimaxAlgorithm(Algorithm):
+
     def minimax(self, number1, number2, score1, score2, turn, depth, maximizing_player):
         if depth == 0 or number1 >= 1000 or number2 >= 1000:
             return score2 - score1, None
@@ -55,6 +54,7 @@ class MinimaxAlgorithm(Algorithm):
             return min_eval, best_move
 
 class AlphaBetaAlgorithm(Algorithm):
+    
     def minimax(self, number1, number2, score1, score2, turn, depth, alpha, beta, maximizing_player):
         if depth == 0 or number1 >= 1000 or number2 >= 1000:
             return score2 - score1, None
@@ -208,30 +208,31 @@ class GameWindow:
         pygame.quit()
     
     def algorithm_choice_screen(self):
-        self.window.fill(BACKGROUND_COLOR)  # Заполняем фон
-        title_font = pygame.font.Font(None, 50)  # Шрифт для заголовка
-        button_font = pygame.font.Font(None, 36)  # Шрифт для текста кнопок
+    
+        self.window.fill(BACKGROUND_COLOR)  # Fill the background
+        title_font = pygame.font.Font(None, 50)  # Font for the title
+        button_font = pygame.font.Font(None, 36)  # Font for the button text
 
-        # Создаем и отрисовываем заголовок
-        title_surface = title_font.render('Choose Algorithm', True, (0, 0, 0))
+        # Create and render the title
+        title_surface = title_font.render('Choose Algorithm', True, (0, 0, 0))  # Black color
         title_rect = title_surface.get_rect(center=(self.width // 2, 50))
         self.window.blit(title_surface, title_rect)
 
-        # Создаем кнопки для выбора алгоритма
-        minimax_button = pygame.Rect(self.width // 4 - 75, 200, 150, 50)
-        alpha_beta_button = pygame.Rect(self.width * 3 // 4 - 75, 200, 150, 50)
+        # Create buttons for choosing the algorithm
+        minimax_button = pygame.Rect((self.width - 150) // 4, 150, 150, 50)
+        alpha_beta_button = pygame.Rect((self.width - 150) * 3 // 4, 150, 150, 50)
 
-        # Отрисовываем кнопки
+        # Draw buttons
         pygame.draw.rect(self.window, BUTTON_COLOR, minimax_button)
         pygame.draw.rect(self.window, BUTTON_COLOR, alpha_beta_button)
 
-        # Наносим текст на кнопки
-        minimax_text = button_font.render('Minimax', True, (255, 255, 255))
-        alpha_beta_text = button_font.render('Alpha-Beta', True, (255, 255, 255))
+        # Render text on buttons
+        minimax_text = button_font.render('Minimax', True, (0, 0, 0))  # Black color
+        alpha_beta_text = button_font.render('Alpha-Beta', True, (0, 0, 0))  # Black color
         self.window.blit(minimax_text, (minimax_button.x + 20, minimax_button.y + 10))
         self.window.blit(alpha_beta_text, (alpha_beta_button.x + 10, alpha_beta_button.y + 10))
 
-        pygame.display.flip()  # Обновляем экран
+        pygame.display.flip()  # Update the screen
 
         while True:
             for event in pygame.event.get():
@@ -249,122 +250,116 @@ class GameWindow:
         self.turn = initial_player
         self.score1 = 0
         self.score2 = 0
-        number1 = number
-        number2 = number
-
+    
+        both_numbers = number  # Assigning the initial number to both_numbers
+    
         text_font = pygame.font.Font(None, 45)  # Font for the text
         number_font = pygame.font.Font(None, 30)  # Font for the number
         score_font = pygame.font.Font(None, 24)  # Font for the score
-
+    
         # Define button parameters
         button_width = 60
         button_height = 35
         button_color = BUTTON_COLOR
         button_font = pygame.font.Font(None, 24)
-
+    
         # Clear the screen
         self.window.fill(BACKGROUND_COLOR)
-
+    
         # Manual input for text positions
         text1_x = 100
         text1_y = 100
-
+    
         text2_x = 400
         text2_y = 100
-
+    
         # Render text "Spēlētājs"
         text1 = text_font.render("Spēlētājs", True, (0, 0, 0))
         text1_rect = text1.get_rect(topleft=(text1_x, text1_y))
         self.window.blit(text1, text1_rect)
-
+    
         # Render text "Dators"
         text2 = text_font.render("Dators", True, (0, 0, 0))
         text2_rect = text2.get_rect(topleft=(text2_x, text2_y))
         self.window.blit(text2, text2_rect)
-
+    
         button1_x = 80
         button1_y = 150
-
+    
         button2_x = 180
         button2_y = 150
-
+    
         button3_x = 360
         button3_y = 150
-
+    
         button4_x = 460
         button4_y = 150
-
+    
         # Render buttons
         button_rects = []  # List to store button rects for collision detection
-
+    
         button_rect = pygame.Rect(button1_x, button1_y, button_width, button_height)
         pygame.draw.rect(self.window, button_color, button_rect)
         button_text = button_font.render("x2", True, (0, 0, 0))
         button_text_rect = button_text.get_rect(center=button_rect.center)
         self.window.blit(button_text, button_text_rect)
         button_rects.append(button_rect)
-
+    
         button_rect = pygame.Rect(button2_x, button2_y, button_width, button_height)
         pygame.draw.rect(self.window, button_color, button_rect)
         button_text = button_font.render("x3", True, (0, 0, 0))
         button_text_rect = button_text.get_rect(center=button_rect.center)
         self.window.blit(button_text, button_text_rect)
         button_rects.append(button_rect)
-
+    
         button_rect = pygame.Rect(button3_x, button3_y, button_width, button_height)
         pygame.draw.rect(self.window, button_color, button_rect)
         button_text = button_font.render("x2", True, (0, 0, 0))
         button_text_rect = button_text.get_rect(center=button_rect.center)
         self.window.blit(button_text, button_text_rect)
         button_rects.append(button_rect)
-
+    
         button_rect = pygame.Rect(button4_x, button4_y, button_width, button_height)
         pygame.draw.rect(self.window, button_color, button_rect)
         button_text = button_font.render("x3", True, (0, 0, 0))
         button_text_rect = button_text.get_rect(center=button_rect.center)
         self.window.blit(button_text, button_text_rect)
         button_rects.append(button_rect)
-
+    
         # Render the window under buttons with number 1
         window1_rect = pygame.Rect(80, 200, 165, 50)
         pygame.draw.rect(self.window, (200, 200, 200), window1_rect)
-        number1 = number  # Initial number for window 1
-        number1_text = number_font.render(str(number1), True, (0, 0, 0))
+        number1_text = number_font.render(str(both_numbers), True, (0, 0, 0))
         number1_text_rect = number1_text.get_rect(center=window1_rect.center)
         self.window.blit(number1_text, number1_text_rect)
-
+    
         # Render the window under buttons with number 1
         window2_rect = pygame.Rect(360, 200, 165, 50)
         pygame.draw.rect(self.window, (200, 200, 200), window2_rect)
-        number2 = number  # Initial number for window 2
-        number2_text = number_font.render(str(number2), True, (0, 0, 0))
+        number2_text = number_font.render(str(both_numbers), True, (0, 0, 0))
         number2_text_rect = number2_text.get_rect(center=window2_rect.center)
         self.window.blit(number2_text, number2_text_rect)
+    
+        pygame.display.update()    
 
-        pygame.display.update()
+        def render_both_players():
 
-        def render_player_one():
             # Update the numbers displayed in the windows
-            number1_text = number_font.render(str(number1), True, (0, 0, 0))
+            number1_text = number_font.render(str(both_numbers), True, (0, 0, 0))
             self.window.fill((200, 200, 200), rect=window1_rect)  # Clear previous number for window 1
             self.window.blit(number1_text, number1_text_rect)
-            pygame.display.update()
 
-        def render_player_two():
-            # Update the numbers displayed in the windows
-            number2_text = number_font.render(str(number2), True, (0, 0, 0))
-            self.window.fill((200, 200, 200), rect=window2_rect)  # Clear previous number for window 2
-            self.window.blit(number2_text, number2_text_rect)
-            pygame.display.update()
+            # number2_text = number_font.render(str(both_numbers), True, (0, 0, 0))
+            # self.window.fill((200, 200, 200), rect=window2_rect)  # Clear previous number for window 2
+            # self.window.blit(number2_text, number2_text_rect)
 
+            pygame.display.update()
+    
         # Initialize scores
         self.turn = initial_player
         self.score1 = 0
         self.score2 = 0
-
-        # Create an instance of the MiniMax algorithm
-        #algo = Algorithm()
-
+    
         # Main loop to handle events
         running = True
         while running:
@@ -372,113 +367,117 @@ class GameWindow:
                 if event.type == pygame.QUIT:
                     running = False
                 elif event.type == pygame.MOUSEBUTTONDOWN and self.turn == 'human':
-                        # Human's turn
-                        # Check if the first two buttons are clicked
-                        for i, rect in enumerate(button_rects[:2]):
-                            if rect.collidepoint(event.pos):
-                                print(f"Button {i + 1} clicked!")
-                                if i == 0:
-                                    number1 *= 2  # Double the number for window 1
-                                elif i == 1:
-                                    number1 *= 3  # Triple the number for window 1
-
-                                # Update the score based on the parity of the number
-                                if number1 % 2 == 0:
-                                    print("Number is even!")
-                                    self.score1 += 1
-                                else:
-                                    print("Number is odd!")
-                                    self.score1 -= 1
-
-                                # Update the numbers displayed in the windows
-                                render_player_one()
-
-                                # Switch to computer's turn
-                                self.turn = 'computer'
-                                break
-
+                    # Human's turn
+                    # Check if the first two buttons are clicked
+                    for i, rect in enumerate(button_rects[:2]):
+                        if rect.collidepoint(event.pos):
+                            print(f"Button {i + 1} clicked!")
+                            if i == 0:
+                                both_numbers *= 2  # Double the number for window 1
+                            elif i == 1:
+                                both_numbers *= 3  # Triple the number for window 1
+    
+                            # Update the score based on the parity of the number
+                            if both_numbers % 2 == 0:
+                                print("Number is even!")
+                                self.score1 += 1
+                            else:
+                                print("Number is odd!")
+                                self.score1 -= 1
+    
+                            # Update the numbers displayed in the windows
+                            render_both_players()
+    
+                            # Switch to computer's turn
+                            self.turn = 'computer'
+                            break
+                        
                 if self.turn == 'computer':
                     print("Computer is thinking...")
                     pygame.display.update()
                     pygame.time.delay(1000)  # Add a delay of 1000 milliseconds (1 second)
-
+    
                     # Get the best move for the computer using MiniMax algorithm
                     if isinstance(algo, MinimaxAlgorithm):
-                                best_eval, best_move = algo.minimax(number1, number2, self.score1, self.score2, 'computer', 3, False)
+                        best_eval, best_move = algo.minimax(both_numbers, both_numbers, self.score1, self.score2, 'computer', 3, False)
                     elif isinstance(algo, AlphaBetaAlgorithm):
-                                best_eval, best_move = algo.minimax(number1, number2, self.score1, self.score2, 'computer', 3, float('-inf'), float('inf'), False)
-
+                        best_eval, best_move = algo.minimax(both_numbers, both_numbers, self.score1, self.score2, 'computer', 3, float('-inf'), float('inf'), False)
+    
                     if best_move:
-                                    number2 = algo.make_move(number2, best_move)
-                                    self.score2 = algo.update_score(self.score2, number2)
+                        both_numbers = algo.make_move(both_numbers, best_move)
+                        self.score2 = algo.update_score(self.score2, both_numbers)
+
+                    # Update the numbers displayed in the windows
+                    render_both_players()
 
                     # Switch to human's turn
                     self.turn = 'human'
-
+    
                 # Check if either score is >= 1000
-                if number1 >= 1000 or number2 >= 1000:
+                if both_numbers >= 1000:
                     print("Goodbye")
                     # Reset the game
-                    self.running = False
+                    running = False
                     return self.score1, self.score2
-
+    
             # Clear the screen
             self.window.fill(BACKGROUND_COLOR)
-
+    
             # Render text "Spēlētājs"
             text1 = text_font.render("Spēlētājs", True, (0, 0, 0))
             text1_rect = text1.get_rect(topleft=(text1_x, text1_y))
             self.window.blit(text1, text1_rect)
-
+    
             # Render text "Dators"
             text2 = text_font.render("Dators", True, (0, 0, 0))
             text2_rect = text2.get_rect(topleft=(text2_x, text2_y))
             self.window.blit(text2, text2_rect)
-
+    
             # Render buttons
             button_rect = pygame.Rect(button1_x, button1_y, button_width, button_height)
             pygame.draw.rect(self.window, button_color, button_rect)
             button_text = button_font.render("x2", True, (0, 0, 0))
             button_text_rect = button_text.get_rect(center=button_rect.center)
             self.window.blit(button_text, button_text_rect)
-
+    
             button_rect = pygame.Rect(button2_x, button2_y, button_width, button_height)
             pygame.draw.rect(self.window, button_color, button_rect)
             button_text = button_font.render("x3", True, (0, 0, 0))
             button_text_rect = button_text.get_rect(center=button_rect.center)
             self.window.blit(button_text, button_text_rect)
-
+    
             button_rect = pygame.Rect(button3_x, button3_y, button_width, button_height)
             pygame.draw.rect(self.window, button_color, button_rect)
             button_text = button_font.render("x2", True, (0, 0, 0))
             button_text_rect = button_text.get_rect(center=button_rect.center)
             self.window.blit(button_text, button_text_rect)
-
+    
             button_rect = pygame.Rect(button4_x, button4_y, button_width, button_height)
             pygame.draw.rect(self.window, button_color, button_rect)
             button_text = button_font.render("x3", True, (0, 0, 0))
             button_text_rect = button_text.get_rect(center=button_rect.center)
             self.window.blit(button_text, button_text_rect)
-
-            # Render the windows
-            window1_rect = pygame.Rect(80, 200, 165, 50)
+    
+            # Render the windows    
+            window1_rect = pygame.Rect(200, 200, 250, 50)
             pygame.draw.rect(self.window, (200, 200, 200), window1_rect)
-            number1_text = number_font.render(str(number1), True, (0, 0, 0))
+            number1_text = number_font.render(str(both_numbers), True, (0, 0, 0))
             number1_text_rect = number1_text.get_rect(center=window1_rect.center)
             self.window.blit(number1_text, number1_text_rect)
-
-            window2_rect = pygame.Rect(360, 200, 165, 50)
-            pygame.draw.rect(self.window, (200, 200, 200), window2_rect)
-            number2_text = number_font.render(str(number2), True, (0, 0, 0))
-            number2_text_rect = number2_text.get_rect(center=window2_rect.center)
-            self.window.blit(number2_text, number2_text_rect)
-
+    
+            # window2_rect = pygame.Rect(360, 200, 165, 50)
+            # pygame.draw.rect(self.window, (200, 200, 200), window2_rect)
+            # number2_text = number_font.render(str(both_numbers), True, (0, 0, 0))
+            # number2_text_rect = number2_text.get_rect(center=window2_rect.center)
+            # self.window.blit(number2_text, number2_text_rect)
+    
             # Render scores
             score_text = score_font.render(f"Player Score: {self.score1}   Computer Score: {self.score2}", True, (0, 0, 0))
             score_text_rect = score_text.get_rect(center=(self.window.get_width() // 2, 300))
             self.window.blit(score_text, score_text_rect)
-
+    
             pygame.display.update()
+
 
     def winner_screen(self, human_score, pc_score):
         """
