@@ -27,35 +27,31 @@ class Algorithm:
 def evaluate_state(score1, score2):
     point_difference = abs(score2 - score1)
     if point_difference == 0:
-        f1 = 1
+        f1 = -1  # Equal scores are less favorable
     elif point_difference == 1:
         f1 = 0
     else:
-        f1 = -3 if score1 < score2 else 3  # Adjusted for computer's goal
+        f1 = 3 if score1 < score2 else -3  # Greater point difference is more favorable
 
-    odd_numbers1 = sum(1 for i in range(2, score1 + 1) if score1 % i == 0)
-    f2 = 0
-    if odd_numbers1 % 2 == 0:
-        f2 += 1
-    else:
-        f2 -= 1
+    # Prioritize 3x over 2x if scores are different and the difference is greater than 1
+    if f1 != 0 and score1 != score2:
+        f1 = 4 if score1 < score2 else -4
 
-    f_value = f1 + f2
-    return f_value
+    return f1
 
-# Minimax algorithm class
 class MinimaxAlgorithm(Algorithm):
-    def minimax(self, number1, score1, score2, turn, depth, maximizing_player):
-        if depth == 0 or number1 >= 1000:
-            return evaluate_state(score1, score2), None 
-            
+
+    def minimax(self, number1, number2, score1, score2, turn, depth, maximizing_player):
+        if depth == 0 or number1 >= 1000 or number2 >= 1000:
+            return evaluate_state(score1, score2), None
+
         if maximizing_player:
             max_eval = float('-inf')
             best_move = None
             for move in self.get_possible_moves(number1, turn):
                 new_number1 = self.make_move(number1, move)
                 new_score1 = self.update_score(score1, new_number1)
-                evaluation = self.minimax(new_number1, new_score1, score2, 'computer', depth - 1, False)[0]
+                evaluation = self.minimax(new_number1, number2, new_score1, score2, 'computer', depth - 1, False)[0]
                 if evaluation > max_eval:
                     max_eval = evaluation
                     best_move = move
@@ -63,10 +59,10 @@ class MinimaxAlgorithm(Algorithm):
         else:
             min_eval = float('inf')
             best_move = None
-            for move in self.get_possible_moves(number1, turn):
-                new_number1 = self.make_move(number1, move)
-                new_score1 = self.update_score(score1, new_number1)
-                evaluation = self.minimax(new_number1, new_score1, score2, 'human', depth - 1, True)[0]
+            for move in self.get_possible_moves(number2, turn):
+                new_number2 = self.make_move(number2, move)
+                new_score2 = self.update_score(score2, new_number2)
+                evaluation = self.minimax(number1, new_number2, score1, new_score2, 'human', depth - 1, True)[0]
                 if evaluation < min_eval:
                     min_eval = evaluation
                     best_move = move
@@ -76,7 +72,7 @@ class AlphaBetaAlgorithm(Algorithm):
     
     def minimax(self, number1, number2, score1, score2, turn, depth, alpha, beta, maximizing_player):
         if depth == 0 or number1 >= 1000 or number2 >= 1000:
-            return evaluate_state(score1, score2), None  
+            return evaluate_state(score1, score2), None
         
         if maximizing_player:
             max_eval = float('-inf')
@@ -416,11 +412,10 @@ class GameWindow:
                     pygame.display.update()
                     pygame.time.delay(1000)  # Add a delay of 1000 milliseconds (1 second)
     
-                    # Get the best move for the computer using MiniMax algorithm
                     if isinstance(algo, MinimaxAlgorithm):
-                        best_eval, best_move = algo.minimax(both_numbers, self.score1, 0, 'computer', 3, False)
+                                best_eval, best_move = algo.minimax(both_numbers, both_numbers, self.score1, self.score2, 'computer', 3, False)
                     elif isinstance(algo, AlphaBetaAlgorithm):
-                        best_eval, best_move = algo.minimax(both_numbers, both_numbers, self.score1, self.score2, 'computer', 3, float('-inf'), float('inf'), False)
+                                best_eval, best_move = algo.minimax(both_numbers, both_numbers, self.score1, self.score2, 'computer', 3, float('-inf'), float('inf'), False)
     
                     if best_move:
                         both_numbers = algo.make_move(both_numbers, best_move)
