@@ -2,10 +2,11 @@
 
 This is a simple text-based game where the player chooses a number and then multiplies it by either 2 or 3. The game continues until a player reaches a total score of 1000 or more. Players take turns multiplying the number and adding it to their score. The player with the highest score at the end wins.
 
-![image](https://github.com/NomadBBY/RTU_Artificial_Intelligence_1_Game_Task/assets/89861525/94c61d1b-bba8-4967-879f-9948e6b52d45)
-![image](https://github.com/NomadBBY/RTU_Artificial_Intelligence_1_Game_Task/assets/89861525/2d7211d1-f52b-4a82-978f-67b0a8b9d5f9)
-![image](https://github.com/NomadBBY/RTU_Artificial_Intelligence_1_Game_Task/assets/89861525/562538ad-82e5-4019-9bc1-061ca4270f33)
-![image](https://github.com/NomadBBY/RTU_Artificial_Intelligence_1_Game_Task/assets/89861525/29361dc0-f307-49e0-9998-444843e17ef0)
+![image](https://github.com/NomadBBY/RTU_Artificial_Intelligence_1_Game_Task/assets/89861525/797eb738-c0b1-47b3-94bb-3174583ff058)
+![image](https://github.com/NomadBBY/RTU_Artificial_Intelligence_1_Game_Task/assets/89861525/f01f667f-c29f-4ec4-b588-d3b784e509d6)
+![image](https://github.com/NomadBBY/RTU_Artificial_Intelligence_1_Game_Task/assets/89861525/530dd3ae-0288-415b-91fc-caf9efae8786)
+![image](https://github.com/NomadBBY/RTU_Artificial_Intelligence_1_Game_Task/assets/89861525/766d60fb-dafa-4bc2-925d-da2cf661198e)
+![image](https://github.com/NomadBBY/RTU_Artificial_Intelligence_1_Game_Task/assets/89861525/8b9fb6b8-0cb6-4606-b7f5-a1bae1cadf79)
 
 ## How to Play
 
