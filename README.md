@@ -22,7 +22,7 @@ Follow the prompts to input a number between 5 and 15.
 
 ## Classes
 
-GameWindow - Handles all of the logic and rendering in the game
+**GameWindow**: This class is responsible for managing all the game logic and rendering tasks. It controls the flow of the game and handles the user interface interactions, including displaying screens, accepting player inputs, updating the game state, and rendering graphical elements.
 
 ## Dependencies
 
