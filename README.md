@@ -24,6 +24,12 @@ Follow the prompts to input a number between 5 and 15.
 
 **GameWindow**: This class is responsible for managing all the game logic and rendering tasks. It controls the flow of the game and handles the user interface interactions, including displaying screens, accepting player inputs, updating the game state, and rendering graphical elements.
 
+**Algorithm**: This class provides the basic algorithms used for decision-making in the game. It includes methods for making moves, updating scores, and determining possible moves.
+
+**MinimaxAlgorithm**: This class extends the Algorithm class and implements the Minimax algorithm for decision-making in the game. It calculates the best move for the computer player by recursively exploring possible future game states and choosing the move that maximizes its score while minimizing the opponent's score.
+
+**AlphaBetaAlgorithm**: This class extends the Algorithm class and implements the Alpha-Beta Pruning algorithm, an optimization of the Minimax algorithm. It improves upon Minimax by reducing the number of nodes evaluated in the search tree, thus making the decision-making process more efficient.
+
 ## Dependencies
 
 - Python 3.x
