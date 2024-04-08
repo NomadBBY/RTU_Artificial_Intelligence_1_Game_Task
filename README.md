@@ -1,6 +1,6 @@
 # Multiplication Game
 
-This is a simple text-based game where the player chooses a number and then multiplies it by either 2 or 3. The game continues until a player reaches a total score of 1000 or more. Players take turns multiplying the number and adding it to their score. The player with the highest score at the end wins.
+This is a simple game implemented using the Pygame library. In this game, players are presented with a graphical user interface (GUI) where they can select a starting number. They then take turns multiplying the current number by either 2 or 3. The game continues until one of the players reaches a total score of 1000 or more. Each player's score is updated based on the result of their multiplication. The player with the highest score when the total reaches or exceeds 1000 is declared the winner.
 
 ![image](https://github.com/NomadBBY/RTU_Artificial_Intelligence_1_Game_Task/assets/89861525/797eb738-c0b1-47b3-94bb-3174583ff058)
 ![image](https://github.com/NomadBBY/RTU_Artificial_Intelligence_1_Game_Task/assets/89861525/f01f667f-c29f-4ec4-b588-d3b784e509d6)
