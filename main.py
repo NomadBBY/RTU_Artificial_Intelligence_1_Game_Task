@@ -12,7 +12,7 @@ class Algorithm:
         """This method takes a number and a move, and returns the result of multiplying them."""
         return number * move
 
-    def update_score(self, score, number):
+    def update_score(self, score, number, score1, score2):
         """
         This method updates the score based on the current score and the number.
         If the number is even, it adds 1 point to the score; otherwise, it subtracts 1 point.
@@ -21,6 +21,15 @@ class Algorithm:
             return score + 1  # Add 1 point for even number
         else:
             return score - 1  # Subtract 1 point for odd number
+
+        #Labojums
+        # Additional logic
+        if score1 - score2 >= 1:
+            return 0
+        elif score1 - score2 == 0:
+            return 1
+        else:
+            return score
 
     def get_possible_moves(self, number, turn):
         """
